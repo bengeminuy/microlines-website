@@ -1,0 +1,123 @@
+---
+import { Image } from 'astro:assets';
+import roller from '@/assets/products/sample-roller.svg';
+import roman from '@/assets/products/sample-roman.svg';
+import bifold from '@/assets/products/sample-bifold.svg';
+import loungeAfter from '@/assets/gallery/lounge-after.svg';
+
+const slides = [
+  { src: roller, alt: 'Roller blind installation', tilt: -4, entry: 10 },
+  { src: roman, alt: 'Roman blind installation', tilt: 3, entry: -8 },
+  { src: bifold, alt: 'Folding door installation', tilt: -2, entry: 7 },
+  { src: loungeAfter, alt: 'Lounge with installed blinds', tilt: 5, entry: -11 },
+];
+---
+
+<div class="absolute inset-0">
+  {slides.map((s, i) => (
+    <div
+      class:list={['stack-slide', `stack-slide-${i + 1}`]}
+      style={`--tilt: ${s.tilt}deg; --entry-x: ${s.entry}%`}
+    >
+      <Image
+        src={s.src}
+        alt={s.alt}
+        widths={[400, 800, 1200]}
+        sizes="(min-width: 768px) 50vw, 100vw"
+        class="h-full w-full object-cover"
+      />
+    </div>
+  ))}
+</div>
+
+<style>
+  .stack-slide {
+    position: absolute;
+    inset: 6%;
+    overflow: hidden;
+    border-radius: 0.5rem;
+    background: var(--color-canvas);
+    box-shadow:
+      0 14px 30px -8px rgb(0 0 0 / 0.25),
+      0 4px 10px -2px rgb(0 0 0 / 0.12);
+    opacity: 0;
+    rotate: var(--tilt, 0deg);
+    translate: 0 -10%;
+    animation: drop-stack 16s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+    will-change: opacity, translate, rotate;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+
+  .stack-slide-1 {
+    animation-delay: 0s;
+  }
+  .stack-slide-2 {
+    animation-delay: -4s;
+  }
+  .stack-slide-3 {
+    animation-delay: -8s;
+  }
+  .stack-slide-4 {
+    animation-delay: -12s;
+  }
+
+  /* The entering slide sits at z-index 20 for its whole drop so it can
+     never tie with the previous top slide. After it settles it falls
+     into the stack at z=4, then steps down 4 → 3 → 2 → 1 as later
+     slides land on top. The bottom slide stays opaque under the cover
+     of the three layers above until its next cycle. */
+  @keyframes drop-stack {
+    0% {
+      opacity: 0;
+      translate: var(--entry-x, 0%) -22%;
+      rotate: calc(var(--tilt, 0deg) + 14deg);
+      z-index: 20;
+    }
+    6% {
+      opacity: 1;
+      translate: 0 0;
+      rotate: var(--tilt, 0deg);
+      z-index: 20;
+    }
+    6.001%,
+    25% {
+      z-index: 4;
+    }
+    25.001%,
+    50% {
+      z-index: 3;
+    }
+    50.001%,
+    75% {
+      z-index: 2;
+    }
+    75.001%,
+    100% {
+      opacity: 1;
+      translate: 0 0;
+      rotate: var(--tilt, 0deg);
+      z-index: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .stack-slide {
+      animation: none;
+      translate: 0 0;
+      opacity: 0;
+    }
+    .stack-slide-1 {
+      opacity: 1;
+      z-index: 4;
+    }
+    .stack-slide-2 {
+      opacity: 1;
+      z-index: 3;
+    }
+    .stack-slide-3 {
+      opacity: 1;
+      z-index: 2;
+    }
+  }
+</style>

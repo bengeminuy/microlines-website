@@ -1,0 +1,55 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { MetaInput } from '@lib/seo/meta';
+import { buildBreadcrumbJsonLd } from '@lib/seo/jsonld';
+import { env } from '@lib/env';
+
+interface Crumb {
+  name: string;
+  url: string;
+}
+
+interface Props extends MetaInput {
+  breadcrumbs?: Crumb[];
+  productJsonLd?: Record<string, unknown>;
+}
+
+const { breadcrumbs, productJsonLd, ...seo } = Astro.props as Props;
+const baseUrl = env.siteUrl.replace(/\/$/, '');
+const crumbsJson = breadcrumbs && breadcrumbs.length > 0
+  ? buildBreadcrumbJsonLd(breadcrumbs.map((c) => ({ ...c, url: c.url.startsWith('http') ? c.url : `${baseUrl}${c.url}` })))
+  : null;
+---
+
+<BaseLayout {...seo}>
+  <Fragment slot="head">
+    {crumbsJson && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(crumbsJson)} />
+    )}
+    {productJsonLd && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(productJsonLd)} />
+    )}
+    <slot name="head" />
+  </Fragment>
+
+  {breadcrumbs && breadcrumbs.length > 0 && (
+    <nav aria-label="Breadcrumb" class="container-page py-4">
+      <ol class="t-ui flex flex-wrap items-center gap-2 text-[var(--color-muted)]">
+        {breadcrumbs.map((c, i) => (
+          <li>
+            {i < breadcrumbs.length - 1 ? (
+              <>
+                <a href={c.url} class="hover:text-[var(--color-ink)]">{c.name}</a>
+                <span aria-hidden="true" class="px-2">/</span>
+              </>
+            ) : (
+              <span aria-current="page" class="text-[var(--color-ink)]">{c.name}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  )}
+
+  <slot />
+</BaseLayout>

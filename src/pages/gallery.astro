@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets';
+import MarketingLayout from '@layouts/MarketingLayout.astro';
+import { getGalleryItems } from '@lib/content/queries';
+import { imageSizes } from '@lib/images';
+
+const items = await getGalleryItems();
+---
+
+<MarketingLayout
+  title="Gallery — before and after"
+  description="A look at past Microlines installations. Before/after comparison photos."
+>
+  <section class="container-page py-10">
+    <header class="mb-10">
+      <h1 class="t-display">Gallery</h1>
+      <p class="t-body prose-measure mt-3">
+        Past installations — same window, before and after fitting. The interactive comparison slider is coming soon.
+      </p>
+    </header>
+
+    <div class="grid gap-12">
+      {items.map((g) => (
+        <figure class="space-y-3">
+          <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            <div>
+              <span class="t-label mb-1 block">Before</span>
+              <Image
+                src={g.data.beforeImage}
+                alt={g.data.beforeAlt}
+                widths={imageSizes.gallery.widths.slice()}
+                sizes={imageSizes.gallery.sizes}
+                class="aspect-[3/2] w-full rounded-md object-cover"
+              />
+            </div>
+            <div>
+              <span class="t-label-brand mb-1 block">After</span>
+              <Image
+                src={g.data.afterImage}
+                alt={g.data.afterAlt}
+                widths={imageSizes.gallery.widths.slice()}
+                sizes={imageSizes.gallery.sizes}
+                class="aspect-[3/2] w-full rounded-md object-cover"
+              />
+            </div>
+          </div>
+          <figcaption>
+            <p class="t-h3">{g.data.title}</p>
+            {g.data.caption && <p class="t-caption mt-1">{g.data.caption}</p>}
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+  </section>
+</MarketingLayout>

@@ -1,0 +1,58 @@
+---
+import ProductLayout from '@layouts/ProductLayout.astro';
+import ProductCard from '@components/product/ProductCard.astro';
+import ProductGrid from '@components/product/ProductGrid.astro';
+import { getBlindsByCategorySlug, getCategories } from '@lib/content/queries';
+
+export async function getStaticPaths() {
+  const categories = await getCategories();
+  return categories.map((c) => ({
+    params: { category: c.data.slug },
+    props: { category: c.data },
+  }));
+}
+
+interface Props {
+  category: { title: string; slug: string; description: string };
+}
+
+const { category } = Astro.props as Props;
+const products = await getBlindsByCategorySlug(category.slug);
+---
+
+<ProductLayout
+  title={`${category.title} blinds`}
+  description={category.description}
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Blinds', url: '/blinds' },
+    { name: category.title, url: `/blinds/${category.slug}` },
+  ]}
+>
+  <section class="container-page py-10">
+    <header class="mb-10">
+      <h1 class="t-display">{category.title}</h1>
+      <p class="t-body prose-measure mt-3">{category.description}</p>
+    </header>
+
+    {products.length === 0 ? (
+      <p class="t-body">
+        No products in this category yet. Try the <a href="/blinds" class="underline">full catalogue</a>.
+      </p>
+    ) : (
+      <ProductGrid>
+        {products.map((p) => (
+          <ProductCard
+            href={`/blinds/${p.slug}`}
+            title={p.data.title}
+            excerpt={p.data.excerpt}
+            heroImage={p.data.heroImage}
+            heroAlt={p.data.heroAlt}
+            priceFrom={p.data.priceFrom}
+            currency={p.data.currency}
+          />
+        ))}
+      </ProductGrid>
+    )}
+  </section>
+</ProductLayout>

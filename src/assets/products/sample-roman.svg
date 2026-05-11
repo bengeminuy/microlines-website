@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="900" fill="#f5f4f1"/>
+  <rect x="200" y="120" width="800" height="640" fill="#fff" stroke="#2a2a2a" stroke-width="6"/>
+  <g fill="#c9b894">
+    <rect x="220" y="140" width="760" height="100"/>
+    <rect x="220" y="250" width="760" height="100"/>
+    <rect x="220" y="360" width="760" height="100"/>
+    <rect x="220" y="470" width="760" height="100"/>
+    <rect x="220" y="580" width="760" height="100"/>
+  </g>
+  <text x="600" y="830" font-family="serif" font-size="36" text-anchor="middle" fill="#555">Sample Roman Blind</text>
+</svg>

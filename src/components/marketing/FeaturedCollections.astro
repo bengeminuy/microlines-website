@@ -1,0 +1,42 @@
+---
+import ProductCard from '@components/product/ProductCard.astro';
+import ProductGrid from '@components/product/ProductGrid.astro';
+import type { BlindEntry, DoorEntry } from '@lib/content/queries';
+
+interface Props {
+  title: string;
+  description?: string;
+  blinds?: BlindEntry[];
+  doors?: DoorEntry[];
+}
+
+const { title, description, blinds = [], doors = [] } = Astro.props as Props;
+const items = [...blinds, ...doors];
+---
+
+<section class="container-page py-16">
+  <header class="mb-8 flex flex-col items-start justify-between gap-2 md:flex-row md:items-end">
+    <div>
+      <h2 class="t-h1">{title}</h2>
+      {description && <p class="t-body prose-measure mt-2">{description}</p>}
+    </div>
+  </header>
+
+  <ProductGrid>
+    {items.map((p) => {
+      const isBlind = 'category' in p.data;
+      const href = isBlind ? `/blinds/${p.slug}` : `/folding-doors/${p.slug}`;
+      return (
+        <ProductCard
+          href={href}
+          title={p.data.title}
+          excerpt={p.data.excerpt}
+          heroImage={p.data.heroImage}
+          heroAlt={p.data.heroAlt}
+          priceFrom={p.data.priceFrom}
+          currency={p.data.currency}
+        />
+      );
+    })}
+  </ProductGrid>
+</section>

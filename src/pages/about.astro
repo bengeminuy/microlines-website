@@ -1,0 +1,29 @@
+---
+import MarketingLayout from '@layouts/MarketingLayout.astro';
+import { site } from '@lib/site';
+---
+
+<MarketingLayout title="About" description={`About ${site.name}.`}>
+  <section class="container-page max-w-3xl py-16">
+    <h1 class="t-display">About {site.name}</h1>
+    <p class="t-body prose-measure mt-4">
+      {site.name} is a small team of fitters and finishers making custom blinds and folding doors for
+      homes and offices. We measure on site, fit to the millimetre, and stand behind every install.
+    </p>
+
+    <div class="mt-12 grid gap-8 md:grid-cols-3">
+      <div>
+        <h2 class="t-label-brand">Made to measure</h2>
+        <p class="t-body-sm mt-2">Every product is cut to your opening — no off-the-shelf compromises.</p>
+      </div>
+      <div>
+        <h2 class="t-label-brand">Free site visits</h2>
+        <p class="t-body-sm mt-2">We come to you, take measurements, and write a quote on the spot.</p>
+      </div>
+      <div>
+        <h2 class="t-label-brand">Fitted by us</h2>
+        <p class="t-body-sm mt-2">No subcontractors. Same crew measures, fits, and follows up.</p>
+      </div>
+    </div>
+  </section>
+</MarketingLayout>

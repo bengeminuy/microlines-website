@@ -1,0 +1,18 @@
+---
+import MarketingLayout from '@layouts/MarketingLayout.astro';
+import Button from '@components/ui/Button.astro';
+---
+
+<MarketingLayout title="Page not found" noindex>
+  <section class="container-page grid place-items-center py-24 text-center">
+    <p class="t-label-brand">404</p>
+    <h1 class="t-display mt-2">We couldn't find that page.</h1>
+    <p class="t-body prose-measure mt-3">
+      The link may be old, or the page may have moved. Try the catalogue or get in touch.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <Button href="/blinds" variant="inkFill">Browse blinds</Button>
+      <Button href="/contact" variant="outline">Contact us</Button>
+    </div>
+  </section>
+</MarketingLayout>

@@ -1,0 +1,13 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { MetaInput } from '@lib/seo/meta';
+
+interface Props extends MetaInput {}
+
+const props = Astro.props as Props;
+---
+
+<BaseLayout {...props}>
+  <slot name="head" slot="head" />
+  <slot />
+</BaseLayout>

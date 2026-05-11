@@ -1,0 +1,30 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  testimonials: CollectionEntry<'testimonials'>[];
+}
+
+const { testimonials } = Astro.props as Props;
+---
+
+{testimonials.length > 0 && (
+  <section class="border-y border-[var(--color-border)] bg-[var(--color-surface)] py-16">
+    <div class="container-page">
+      <h2 class="t-h1 mb-8">From our customers</h2>
+      <div class="grid gap-6 md:grid-cols-3">
+        {testimonials.map((t) => (
+          <figure class="rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] p-6">
+            <div aria-label={`${t.data.rating} out of 5 stars`} class="mb-3 text-[var(--color-brand)]">
+              {'★'.repeat(t.data.rating)}{'☆'.repeat(5 - t.data.rating)}
+            </div>
+            <blockquote class="t-quote">{t.data.quote}</blockquote>
+            <figcaption class="t-caption mt-4">
+              — {t.data.name}{t.data.location ? `, ${t.data.location}` : ''}
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+)}

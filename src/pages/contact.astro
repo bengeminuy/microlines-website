@@ -1,0 +1,68 @@
+---
+import MarketingLayout from '@layouts/MarketingLayout.astro';
+import ContactForm from '@components/forms/ContactForm.astro';
+import { office } from '@lib/site';
+
+const params = Astro.url.searchParams;
+const succeeded = params.get('ok') === '1';
+
+const errors: Record<string, string> = {};
+const values: Record<string, string> = {};
+for (const [k, v] of params.entries()) {
+  if (k.startsWith('e_')) errors[k.slice(2)] = v;
+  if (k.startsWith('v_')) values[k.slice(2)] = v;
+}
+if (params.get('error') === 'transport') {
+  errors._form = "Sorry — we couldn't send your message. Please email us instead.";
+}
+---
+
+<MarketingLayout
+  title="Contact"
+  description={`Get in touch with ${office.name}.`}
+>
+  <section class="container-page grid gap-10 py-16 md:grid-cols-2">
+    <div>
+      <h1 class="t-display">Contact us</h1>
+      <p class="t-body prose-measure mt-4">
+        Drop us a line — for quotes, the form opposite is fastest. For anything else, we're happy to chat.
+      </p>
+
+      <address class="mt-10 not-italic">
+        <p class="t-label mb-2">{office.name}</p>
+        <div class="t-body-sm space-y-0.5">
+          {office.addressLines.map((l) => <p>{l}</p>)}
+          <p>{office.city}, {office.region} {office.postcode}</p>
+          <p class="pt-2"><a href={`tel:${office.phone.replace(/\s+/g, '')}`}>{office.phone}</a></p>
+          <p><a href={`mailto:${office.email}`}>{office.email}</a></p>
+        </div>
+      </address>
+
+      <div class="mt-8">
+        <h2 class="t-label mb-2">Hours</h2>
+        <ul class="t-body-sm space-y-0.5">
+          {office.hours.map((h) => (
+            <li class="capitalize">{h.day}: {h.open}–{h.close}</li>
+          ))}
+        </ul>
+      </div>
+
+      {office.mapEmbedUrl && (
+        <div class="mt-8 overflow-hidden rounded-lg border border-[var(--color-border)]">
+          <iframe
+            src={office.mapEmbedUrl}
+            title={`Map showing ${office.name}`}
+            width="100%"
+            height="280"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      )}
+    </div>
+
+    <div>
+      <ContactForm errors={errors} values={values} succeeded={succeeded} />
+    </div>
+  </section>
+</MarketingLayout>

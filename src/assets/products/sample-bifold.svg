@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="900" fill="#f5f4f1"/>
+  <rect x="100" y="120" width="1000" height="640" fill="#fff" stroke="#2a2a2a" stroke-width="6"/>
+  <g stroke="#2a2a2a" stroke-width="3" fill="#dde9eb">
+    <rect x="120" y="140" width="240" height="600"/>
+    <rect x="360" y="140" width="240" height="600"/>
+    <rect x="600" y="140" width="240" height="600"/>
+    <rect x="840" y="140" width="240" height="600"/>
+  </g>
+  <text x="600" y="830" font-family="serif" font-size="36" text-anchor="middle" fill="#555">Sample Bifold Door</text>
+</svg>

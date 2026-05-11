@@ -1,0 +1,176 @@
+---
+type SubLink = { href: string; label: string; description?: string };
+type NavLink = { href: string; label: string; bold?: boolean; menu?: 'blinds' | 'doors' };
+
+const navLinks: NavLink[] = [
+  { href: '/blinds', label: 'Window Blinds', bold: true, menu: 'blinds' },
+  { href: '/folding-doors', label: 'Folding Doors', bold: true, menu: 'doors' },
+  { href: '/gallery', label: 'Gallery' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' },
+];
+
+const blindsSubLinks: SubLink[] = [
+  {
+    href: '/blinds/roller',
+    label: 'Roller Blinds',
+    description: 'Sleek and versatile — pairs with blackout, dimout, sheer, or sunscreen fabrics.',
+  },
+  {
+    href: '/blinds/roman',
+    label: 'Roman Blinds',
+    description: 'Soft fabric folds for a tailored, residential feel.',
+  },
+  {
+    href: '/blinds/venetian',
+    label: 'Venetian Blinds',
+    description: 'Tilt-controlled slats in aluminium, timber, or faux-wood.',
+  },
+];
+
+const doorsSubLinks: SubLink[] = [
+  {
+    href: '/folding-doors',
+    label: 'Aluminium Bifold',
+    description: 'Slim-frame bifold systems in 2, 3, 4, and 6-panel configurations.',
+  },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="dropdown-nav self-stretch" aria-label="Primary">
+  <ul class="flex h-full flex-wrap items-stretch">
+    {
+      navLinks.map((l) => {
+        const active = currentPath === l.href || currentPath.startsWith(l.href + '/');
+        const hasMenu = !!l.menu;
+        return (
+          <li data-menu={hasMenu ? l.menu : undefined} class="flex items-center px-3">
+            <a
+              href={l.href}
+              aria-current={active ? 'page' : undefined}
+              aria-haspopup={hasMenu ? 'true' : undefined}
+              class:list={[
+                't-ui relative inline-block overflow-hidden py-2 align-middle transition-colors',
+                'after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-[2px] after:bg-[var(--color-brand)]',
+                'after:transition-transform after:duration-300 after:ease-out motion-reduce:after:transition-none',
+                l.bold && 'font-bold!',
+                active
+                  ? 'text-[var(--color-ink)] after:translate-y-0'
+                  : 'text-[var(--color-muted)] after:translate-y-3 hover:text-[var(--color-ink)] hover:after:translate-y-0 focus-visible:after:translate-y-0',
+              ]}
+            >
+              {l.label}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+
+  <div
+    class="dropdown-panel absolute inset-x-0 top-full border-t border-[var(--color-border)] bg-[var(--color-canvas)]/95 shadow-lg backdrop-blur"
+  >
+    <div class="dropdown-section" data-content="blinds">
+      <div class="container-page py-8">
+        <ul class="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            blindsSubLinks.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  class="block rounded-md p-3 transition-colors hover:bg-[var(--color-surface)]"
+                >
+                  <div class="t-ui font-semibold text-[var(--color-ink)]">{s.label}</div>
+                  {s.description && (
+                    <p class="t-body-sm mt-1 text-[var(--color-muted)]">{s.description}</p>
+                  )}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+    <div class="dropdown-section" data-content="doors">
+      <div class="container-page py-8">
+        <ul class="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+          {
+            doorsSubLinks.map((s) => (
+              <li>
+                <a
+                  href={s.href}
+                  class="block rounded-md p-3 transition-colors hover:bg-[var(--color-surface)]"
+                >
+                  <div class="t-ui font-semibold text-[var(--color-ink)]">{s.label}</div>
+                  {s.description && (
+                    <p class="t-body-sm mt-1 text-[var(--color-muted)]">{s.description}</p>
+                  )}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .dropdown-panel {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms ease-out 100ms;
+  }
+  .dropdown-nav:has(li[data-menu]:hover) .dropdown-panel,
+  .dropdown-panel:hover {
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0s;
+  }
+
+  .dropdown-panel {
+    display: grid;
+    grid-template-areas: 'stack';
+  }
+  .dropdown-section {
+    grid-area: stack;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      visibility 0s linear 300ms,
+      opacity 200ms ease-out 100ms;
+  }
+
+  .dropdown-nav:has(li[data-menu='blinds']:hover) .dropdown-section[data-content='blinds'],
+  .dropdown-section[data-content='blinds']:hover {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0s;
+  }
+  .dropdown-nav:has(li[data-menu='doors']:hover) .dropdown-section[data-content='doors'],
+  .dropdown-section[data-content='doors']:hover {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    transition: opacity 0s;
+  }
+
+  /* When the other trigger is hovered, snap this section out instantly (no cross-fade) */
+  .dropdown-nav:has(li[data-menu='doors']:hover) .dropdown-section[data-content='blinds'],
+  .dropdown-nav:has(li[data-menu='blinds']:hover) .dropdown-section[data-content='doors'] {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dropdown-panel,
+    .dropdown-section {
+      transition: none;
+    }
+  }
+</style>

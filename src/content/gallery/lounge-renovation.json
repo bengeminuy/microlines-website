@@ -1,0 +1,11 @@
+{
+  "title": "Lounge renovation, Makati",
+  "caption": "Replaced bare windows with motorised dimout rollers for an open-plan lounge.",
+  "beforeImage": "../../assets/gallery/lounge-before.svg",
+  "beforeAlt": "Bare lounge window before installation",
+  "afterImage": "../../assets/gallery/lounge-after.svg",
+  "afterAlt": "Same lounge window with dimout roller blind installed",
+  "productRef": "sample-roller-blind",
+  "tags": ["roller", "lounge", "modern"],
+  "featured": true
+}

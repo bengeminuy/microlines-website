@@ -1,0 +1,37 @@
+---
+import MarketingLayout from '@layouts/MarketingLayout.astro';
+import Hero from '@components/marketing/Hero.astro';
+import HeroGallery from '@components/marketing/HeroGallery.astro';
+import FeaturedCollections from '@components/marketing/FeaturedCollections.astro';
+import SocialProof from '@components/marketing/SocialProof.astro';
+import QuoteCTA from '@components/marketing/QuoteCTA.astro';
+import { getFeaturedBlinds, getFeaturedFoldingDoors, getTestimonials } from '@lib/content/queries';
+import { site } from '@lib/site';
+
+const blinds = await getFeaturedBlinds(3);
+const doors = await getFeaturedFoldingDoors(2);
+const testimonials = await getTestimonials(3);
+---
+
+<MarketingLayout title={site.tagline} description={site.description}>
+  <Hero
+    eyebrow="Your number one importer of leading korean blinds"
+    title="Combining quality, elegance, and style to truly elevate any space"
+    subtitle="Because your home deserves nothing less"
+    primaryCta={{ href: '/quote', label: 'Request a free quote' }}
+    secondaryCta={{ href: '/blinds', label: 'Browse the catalogue' }}
+  >
+    <HeroGallery slot="visual" />
+  </Hero>
+
+  <FeaturedCollections
+    title="Featured collections"
+    description="A look at our most-requested blinds and door systems. Browse the full catalogue for the rest."
+    blinds={blinds}
+    doors={doors}
+  />
+
+  <SocialProof testimonials={testimonials} />
+
+  <QuoteCTA />
+</MarketingLayout>

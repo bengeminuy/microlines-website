@@ -1,0 +1,40 @@
+---
+import ProductLayout from '@layouts/ProductLayout.astro';
+import ProductCard from '@components/product/ProductCard.astro';
+import ProductGrid from '@components/product/ProductGrid.astro';
+import { getFoldingDoors } from '@lib/content/queries';
+
+const doors = await getFoldingDoors();
+---
+
+<ProductLayout
+  title="Folding doors"
+  description="Aluminium and timber folding door systems — fitted to open up rooms, gardens, and patios."
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Folding Doors', url: '/folding-doors' },
+  ]}
+>
+  <section class="container-page py-10">
+    <header class="mb-10">
+      <h1 class="t-display">Folding Doors</h1>
+      <p class="t-body prose-measure mt-3">
+        Slim-frame bifold systems in 2, 3, 4, and 6-panel configurations. Custom-sized to your opening.
+      </p>
+    </header>
+
+    <ProductGrid>
+      {doors.map((p) => (
+        <ProductCard
+          href={`/folding-doors/${p.slug}`}
+          title={p.data.title}
+          excerpt={p.data.excerpt}
+          heroImage={p.data.heroImage}
+          heroAlt={p.data.heroAlt}
+          priceFrom={p.data.priceFrom}
+          currency={p.data.currency}
+        />
+      ))}
+    </ProductGrid>
+  </section>
+</ProductLayout>

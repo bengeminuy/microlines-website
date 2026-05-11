@@ -1,0 +1,33 @@
+---
+import MarketingLayout from '@layouts/MarketingLayout.astro';
+import QuoteForm from '@components/forms/QuoteForm.astro';
+
+const params = Astro.url.searchParams;
+const succeeded = params.get('ok') === '1';
+const preselectProduct = params.get('product') ?? undefined;
+
+const errors: Record<string, string> = {};
+const values: Record<string, string> = {};
+for (const [k, v] of params.entries()) {
+  if (k.startsWith('e_')) errors[k.slice(2)] = v;
+  if (k.startsWith('v_')) values[k.slice(2)] = v;
+}
+if (params.get('error') === 'transport') {
+  errors._form = "Sorry — we couldn't send your request. Please call or email us.";
+}
+---
+
+<MarketingLayout
+  title="Request a quote"
+  description="Tell us about your space and we'll come measure for free."
+>
+  <section class="container-page max-w-2xl py-16">
+    <h1 class="t-display">Request a quote</h1>
+    <p class="t-body mt-3">
+      A team member will be in touch within one business day to schedule a free on-site measure.
+    </p>
+    <div class="mt-8">
+      <QuoteForm preselectProduct={preselectProduct} errors={errors} values={values} succeeded={succeeded} />
+    </div>
+  </section>
+</MarketingLayout>

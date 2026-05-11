@@ -1,0 +1,58 @@
+---
+import ProductLayout from '@layouts/ProductLayout.astro';
+import ProductCard from '@components/product/ProductCard.astro';
+import ProductGrid from '@components/product/ProductGrid.astro';
+import { getBlinds, getCategories } from '@lib/content/queries';
+
+const blinds = await getBlinds();
+const categories = await getCategories();
+---
+
+<ProductLayout
+  title="Window blinds catalogue"
+  description="Roller, roman, venetian and more — made to measure with a free on-site fitting visit."
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Blinds', url: '/blinds' },
+  ]}
+>
+  <section class="container-page py-10">
+    <header class="mb-10">
+      <h1 class="t-display">Blinds</h1>
+      <p class="t-body prose-measure mt-3">
+        Browse by category or scroll the full catalogue. Every blind is custom-made to your opening.
+      </p>
+    </header>
+
+    {categories.length > 0 && (
+      <nav aria-label="Blind categories" class="mb-10">
+        <ul class="flex flex-wrap gap-2">
+          {categories.map((c) => (
+            <li>
+              <a
+                href={`/blinds/${c.data.slug}`}
+                class="t-ui inline-block rounded-full border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-1.5 transition-colors hover:border-[var(--color-brand)] hover:text-[var(--color-brand)]"
+              >
+                {c.data.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )}
+
+    <ProductGrid>
+      {blinds.map((p) => (
+        <ProductCard
+          href={`/blinds/${p.slug}`}
+          title={p.data.title}
+          excerpt={p.data.excerpt}
+          heroImage={p.data.heroImage}
+          heroAlt={p.data.heroAlt}
+          priceFrom={p.data.priceFrom}
+          currency={p.data.currency}
+        />
+      ))}
+    </ProductGrid>
+  </section>
+</ProductLayout>

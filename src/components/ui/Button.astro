@@ -1,0 +1,44 @@
+---
+/**
+ * Button — DESIGN.md L410–465.
+ *
+ * Variants:
+ *   inkFill   — default CTA on canvas/surface backgrounds.
+ *   brandFill — high-priority CTA. One per section maximum.
+ *   outline   — secondary action alongside a primary button.
+ *   ghost     — secondary action on dark backgrounds only.
+ */
+type Variant = 'inkFill' | 'brandFill' | 'outline' | 'ghost';
+
+interface Props {
+  href?: string;
+  variant?: Variant;
+  type?: 'button' | 'submit' | 'reset';
+  class?: string;
+}
+
+const { href, variant = 'inkFill', type = 'button', class: className = '' } = Astro.props as Props;
+
+const variantClass: Record<Variant, string> = {
+  inkFill: 'bg-ink text-canvas hover:bg-dark',
+  brandFill: 'bg-brand text-canvas hover:bg-brand-900',
+  outline:
+    'bg-transparent text-ink border-[1.5px] border-subtle hover:bg-surface hover:border-charcoal',
+  ghost:
+    'bg-transparent text-[rgba(254,252,251,0.5)] border border-[rgba(254,252,251,0.15)] hover:text-canvas hover:border-[rgba(254,252,251,0.35)]',
+};
+
+const base = `t-button inline-flex items-center justify-center rounded-md px-5 py-2.5 transition-colors ${variantClass[variant]} ${className}`;
+---
+
+{
+  href ? (
+    <a href={href} class={base}>
+      <slot />
+    </a>
+  ) : (
+    <button type={type} class={base}>
+      <slot />
+    </button>
+  )
+}

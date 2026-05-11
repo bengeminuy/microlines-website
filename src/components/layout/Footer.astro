@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import { office, site } from '@lib/site';
+import logo from '@/assets/company/logo-transparent.png';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--color-border)] bg-[var(--color-surface)]">
+  <div class="container-page grid gap-10 py-12 md:grid-cols-4">
+    <div class="md:col-span-2">
+      <Image src={logo} alt="Microlines Sales Corp" class="h-28 w-auto" densities={[1, 2]} />
+      <p class="t-body-sm mt-4 max-w-md">{site.description}</p>
+    </div>
+
+    <address class="not-italic">
+      <p class="t-label mb-2">Office</p>
+      <div class="t-body-sm space-y-0.5">
+        {office.addressLines.map((l) => <p>{l}</p>)}
+        <p>{office.city}, {office.region} {office.postcode}</p>
+        <p class="pt-2"><a href={`tel:${office.phone.replace(/\s+/g, '')}`}>{office.phone}</a></p>
+        <p><a href={`mailto:${office.email}`}>{office.email}</a></p>
+      </div>
+    </address>
+
+    <div>
+      <p class="t-label mb-2">Hours</p>
+      <ul class="t-body-sm space-y-0.5">
+        {office.hours.map((h) => (
+          <li class="capitalize">{h.day}: {h.open}–{h.close}</li>
+        ))}
+      </ul>
+    </div>
+  </div>
+  <div class="container-page border-t border-[var(--color-border)] py-4">
+    <p class="t-caption">© {year} {site.name}. All rights reserved.</p>
+  </div>
+</footer>

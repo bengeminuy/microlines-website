@@ -1,0 +1,261 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/dm-sans/index.css';
+@import '@fontsource-variable/dm-sans/wght-italic.css';
+@import '@fontsource-variable/syne/index.css';
+@import './tokens.css';
+
+@theme {
+  --color-brand-50:  var(--color-brand-50);
+  --color-brand-100: var(--color-brand-100);
+  --color-brand-200: var(--color-brand-200);
+  --color-brand-300: var(--color-brand-300);
+  --color-brand-400: var(--color-brand-400);
+  --color-brand-500: var(--color-brand-500);
+  --color-brand:     var(--color-brand);
+  --color-brand-900: var(--color-brand-900);
+  --color-brand-950: var(--color-brand-950);
+
+  --color-canvas:      var(--color-canvas);
+  --color-surface:     var(--color-surface);
+  --color-surface-alt: var(--color-surface-alt);
+  --color-border:      var(--color-border);
+  --color-subtle:      var(--color-subtle);
+  --color-muted:       var(--color-muted);
+  --color-charcoal:    var(--color-charcoal);
+  --color-dark:        var(--color-dark);
+  --color-ink:         var(--color-ink);
+
+  --font-sans:    var(--font-body);
+  --font-display: var(--font-display);
+}
+
+html {
+  background: var(--color-bg-page);
+  color: var(--color-text-secondary);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+a {
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.container-page {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .container-page {
+    padding-inline: var(--space-4);
+  }
+}
+
+/* Typography utilities — pull from DESIGN.md type scale. Do not use arbitrary sizes. */
+
+.t-display {
+  font-family: var(--font-display);
+  font-size: var(--text-display);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  color: var(--color-text-primary);
+}
+
+.t-h1 {
+  font-family: var(--font-display);
+  font-size: var(--text-h1);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+}
+
+.t-h2 {
+  font-family: var(--font-display);
+  font-size: var(--text-h2);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--color-text-primary);
+}
+
+.t-h3 {
+  font-family: var(--font-display);
+  font-size: var(--text-h3);
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+  color: var(--color-text-primary);
+}
+
+.t-accent {
+  font-family: var(--font-display);
+  font-size: var(--text-accent);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--color-brand);
+}
+
+.t-body {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: 1.65;
+  color: var(--color-text-secondary);
+}
+
+.t-body-sm {
+  font-family: var(--font-body);
+  font-size: var(--text-body-sm);
+  font-weight: 400;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+.t-ui {
+  font-family: var(--font-body);
+  font-size: var(--text-ui);
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--color-text-primary);
+}
+
+.t-button {
+  font-family: var(--font-body);
+  font-size: var(--text-ui);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.t-label {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.t-label-brand {
+  font-family: var(--font-body);
+  font-size: var(--text-label);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+.t-caption {
+  font-family: var(--font-body);
+  font-size: var(--text-caption);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--color-text-disabled);
+}
+
+.t-quote {
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
+
+/* Body copy line length cap — DESIGN.md: 60-75 char target */
+.prose-measure {
+  max-width: 40rem;
+}
+
+/* Logo wordmark — Syne 700, period in brand color */
+.logo-wordmark {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.logo-wordmark .logo-dot {
+  color: var(--color-brand);
+}
+
+/* Dark section context — DESIGN.md L342–355.
+   Apply to a section/wrapper for near-black backgrounds (footer, nav, promo). */
+.on-dark {
+  background: var(--color-bg-dark);
+  color: var(--color-canvas);
+}
+
+.on-dark .t-body,
+.on-dark .t-body-sm,
+.on-dark p {
+  color: var(--color-text-on-dark);
+  font-weight: 300;
+}
+
+.on-dark .t-display,
+.on-dark .t-h1,
+.on-dark .t-h2,
+.on-dark .t-h3,
+.on-dark .t-ui {
+  color: var(--color-canvas);
+}
+
+.on-dark .t-label,
+.on-dark .t-caption {
+  color: var(--color-text-on-dark);
+}
+
+.on-dark .t-accent,
+.on-dark .t-label-brand {
+  color: var(--color-brand-300);
+}
+
+.on-dark hr,
+.on-dark .border-divider {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Brand section context — DESIGN.md L357–371. */
+.on-brand {
+  background: var(--color-bg-brand);
+  color: var(--color-canvas);
+}
+
+.on-brand .t-body,
+.on-brand .t-body-sm,
+.on-brand p {
+  color: var(--color-text-on-brand-muted);
+}
+
+.on-brand .t-display,
+.on-brand .t-h1,
+.on-brand .t-h2,
+.on-brand .t-h3,
+.on-brand .t-ui {
+  color: var(--color-canvas);
+}
+
+.on-brand hr,
+.on-brand .border-divider {
+  border-color: rgba(255, 255, 255, 0.15);
+}

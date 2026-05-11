@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import Nav from './Nav.astro';
+import logo from '@/assets/company/logo-transparent.png';
+---
+
+<header class="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--color-canvas)]/90 backdrop-blur">
+  <div class="container-page flex items-center justify-between gap-6">
+    <a href="/" aria-label="Microlines Sales Corp — home" class="block">
+      <Image src={logo} alt="Microlines Sales Corp" class="-my-4 h-24 w-auto" densities={[1, 2]} />
+    </a>
+    <Nav />
+    <a
+      href="/quote"
+      class="t-button hidden rounded-md bg-[var(--color-brand)] px-4 py-2.5 text-[var(--color-canvas)] transition-opacity hover:bg-[var(--color-brand-900)] sm:inline-block"
+    >
+      Request a quote
+    </a>
+  </div>
+</header>

@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry, type CollectionEntry } from 'astro:content';
+import ProductLayout from '@layouts/ProductLayout.astro';
+import SwatchList from '@components/product/SwatchList.astro';
+import PriceFromBadge from '@components/product/PriceFromBadge.astro';
+import Button from '@components/ui/Button.astro';
+import { buildProductJsonLd } from '@lib/seo/jsonld';
+import { getBlinds, getCategories } from '@lib/content/queries';
+import { imageSizes } from '@lib/images';
+import { env } from '@lib/env';
+
+export async function getStaticPaths() {
+  const blinds = await getBlinds();
+  const categories = await getCategories();
+  const categorySlugs = new Set(categories.map((c) => c.data.slug));
+  // Skip any product whose slug collides with a category slug
+  return blinds
+    .filter((p) => !categorySlugs.has(p.slug))
+    .map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+
+interface Props {
+  product: CollectionEntry<'blinds'>;
+}
+
+const { product } = Astro.props as Props;
+const fabrics = await Promise.all(
+  product.data.availableFabrics.map((ref) => getEntry(ref)),
+).then((arr) => arr.filter(Boolean) as CollectionEntry<'fabrics'>[]);
+
+const category = await getEntry(product.data.category);
+
+const baseUrl = env.siteUrl.replace(/\/$/, '');
+const productJsonLd = buildProductJsonLd({
+  name: product.data.title,
+  description: product.data.excerpt,
+  image: `${baseUrl}${product.data.heroImage.src}`,
+  priceFrom: product.data.priceFrom,
+  currency: product.data.currency,
+  url: `${baseUrl}/blinds/${product.slug}`,
+});
+---
+
+<ProductLayout
+  title={product.data.title}
+  description={product.data.excerpt}
+  type="product"
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Blinds', url: '/blinds' },
+    ...(category ? [{ name: category.data.title, url: `/blinds/${category.data.slug}` }] : []),
+    { name: product.data.title, url: `/blinds/${product.slug}` },
+  ]}
+  productJsonLd={productJsonLd}
+>
+  <article class="container-page grid gap-10 py-10 lg:grid-cols-2">
+    <div class="overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
+      <Image
+        src={product.data.heroImage}
+        alt={product.data.heroAlt}
+        widths={imageSizes.productHero.widths.slice()}
+        sizes={imageSizes.productHero.sizes}
+        class="h-full w-full object-cover"
+      />
+    </div>
+    <div class="flex flex-col gap-6">
+      <header>
+        <h1 class="t-display">{product.data.title}</h1>
+        <p class="t-body mt-3">{product.data.excerpt}</p>
+        <div class="mt-4"><PriceFromBadge amount={product.data.priceFrom} currency={product.data.currency} /></div>
+      </header>
+
+      {product.data.features.length > 0 && (
+        <section>
+          <h2 class="t-label mb-3">Features</h2>
+          <ul class="t-body-sm list-disc space-y-1 pl-5">
+            {product.data.features.map((f) => <li>{f}</li>)}
+          </ul>
+        </section>
+      )}
+
+      <SwatchList fabrics={fabrics} />
+
+      {product.data.sizeRange && (
+        <section class="t-body-sm">
+          Sizes from {product.data.sizeRange.minWidth}{product.data.sizeRange.unit} ×{' '}
+          {product.data.sizeRange.minDrop}{product.data.sizeRange.unit} to{' '}
+          {product.data.sizeRange.maxWidth}{product.data.sizeRange.unit} ×{' '}
+          {product.data.sizeRange.maxDrop}{product.data.sizeRange.unit}.
+        </section>
+      )}
+
+      <div class="flex flex-wrap gap-3 pt-2">
+        <Button href={`/quote?product=${product.slug}`} variant="brandFill">Request a quote</Button>
+        <Button href="/blinds" variant="outline">Back to catalogue</Button>
+      </div>
+    </div>
+  </article>
+</ProductLayout>

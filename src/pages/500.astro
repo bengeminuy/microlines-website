@@ -1,0 +1,18 @@
+---
+import MarketingLayout from '@layouts/MarketingLayout.astro';
+import Button from '@components/ui/Button.astro';
+---
+
+<MarketingLayout title="Something went wrong" noindex>
+  <section class="container-page grid place-items-center py-24 text-center">
+    <p class="t-label-brand">500</p>
+    <h1 class="t-display mt-2">Something went wrong.</h1>
+    <p class="t-body prose-measure mt-3">
+      Sorry — that's on us. Please try again, or reach out and we'll help directly.
+    </p>
+    <div class="mt-8 flex flex-wrap justify-center gap-3">
+      <Button href="/" variant="inkFill">Back to home</Button>
+      <Button href="/contact" variant="outline">Contact us</Button>
+    </div>
+  </section>
+</MarketingLayout>

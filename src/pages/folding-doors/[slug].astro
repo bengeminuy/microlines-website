@@ -1,0 +1,97 @@
+---
+import { Image } from 'astro:assets';
+import { type CollectionEntry } from 'astro:content';
+import ProductLayout from '@layouts/ProductLayout.astro';
+import PriceFromBadge from '@components/product/PriceFromBadge.astro';
+import Button from '@components/ui/Button.astro';
+import { buildProductJsonLd } from '@lib/seo/jsonld';
+import { getFoldingDoors } from '@lib/content/queries';
+import { imageSizes } from '@lib/images';
+import { env } from '@lib/env';
+
+export async function getStaticPaths() {
+  const doors = await getFoldingDoors();
+  return doors.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+
+interface Props {
+  product: CollectionEntry<'folding-doors'>;
+}
+
+const { product } = Astro.props as Props;
+const baseUrl = env.siteUrl.replace(/\/$/, '');
+
+const productJsonLd = buildProductJsonLd({
+  name: product.data.title,
+  description: product.data.excerpt,
+  image: `${baseUrl}${product.data.heroImage.src}`,
+  priceFrom: product.data.priceFrom,
+  currency: product.data.currency,
+  url: `${baseUrl}/folding-doors/${product.slug}`,
+});
+---
+
+<ProductLayout
+  title={product.data.title}
+  description={product.data.excerpt}
+  type="product"
+  breadcrumbs={[
+    { name: 'Home', url: '/' },
+    { name: 'Folding Doors', url: '/folding-doors' },
+    { name: product.data.title, url: `/folding-doors/${product.slug}` },
+  ]}
+  productJsonLd={productJsonLd}
+>
+  <article class="container-page grid gap-10 py-10 lg:grid-cols-2">
+    <div class="overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]">
+      <Image
+        src={product.data.heroImage}
+        alt={product.data.heroAlt}
+        widths={imageSizes.productHero.widths.slice()}
+        sizes={imageSizes.productHero.sizes}
+        class="h-full w-full object-cover"
+      />
+    </div>
+    <div class="flex flex-col gap-6">
+      <header>
+        <h1 class="t-display">{product.data.title}</h1>
+        <p class="t-body mt-3">{product.data.excerpt}</p>
+        <div class="mt-4"><PriceFromBadge amount={product.data.priceFrom} currency={product.data.currency} /></div>
+      </header>
+
+      {product.data.features.length > 0 && (
+        <section>
+          <h2 class="t-label mb-3">Features</h2>
+          <ul class="t-body-sm list-disc space-y-1 pl-5">
+            {product.data.features.map((f) => <li>{f}</li>)}
+          </ul>
+        </section>
+      )}
+
+      {product.data.panelOptions.length > 0 && (
+        <section>
+          <h2 class="t-label mb-3">Panel options</h2>
+          <ul class="t-body-sm flex flex-wrap gap-2">
+            {product.data.panelOptions.map((n) => (
+              <li class="rounded-full border border-[var(--color-border)] px-3 py-1">{n}-panel</li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {product.data.glazingOptions.length > 0 && (
+        <section>
+          <h2 class="t-label mb-3">Glazing</h2>
+          <ul class="t-body-sm list-disc space-y-1 pl-5">
+            {product.data.glazingOptions.map((g) => <li>{g}</li>)}
+          </ul>
+        </section>
+      )}
+
+      <div class="flex flex-wrap gap-3 pt-2">
+        <Button href={`/quote?product=${product.slug}`} variant="brandFill">Request a quote</Button>
+        <Button href="/folding-doors" variant="outline">Back to catalogue</Button>
+      </div>
+    </div>
+  </article>
+</ProductLayout>

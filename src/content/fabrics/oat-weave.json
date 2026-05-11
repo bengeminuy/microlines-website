@@ -1,0 +1,8 @@
+{
+  "id": "oat-weave",
+  "name": "Oat Weave",
+  "colorHex": "#d6c9a8",
+  "opacity": "translucent",
+  "compatibleWith": ["roller", "roman"],
+  "tags": ["warm", "neutral", "light"]
+}
