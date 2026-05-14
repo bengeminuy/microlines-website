@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="800" fill="#efe6d4"/>
+  <rect x="120" y="80" width="960" height="540" fill="#c9a878" stroke="#2a2a2a" stroke-width="6"/>
+  <g stroke="#8a6a3d" stroke-width="2">
+    <line x1="120" y1="180" x2="1080" y2="180"/>
+    <line x1="120" y1="280" x2="1080" y2="280"/>
+    <line x1="120" y1="380" x2="1080" y2="380"/>
+    <line x1="120" y1="480" x2="1080" y2="480"/>
+    <line x1="120" y1="580" x2="1080" y2="580"/>
+  </g>
+  <text x="600" y="730" font-family="serif" font-size="32" text-anchor="middle" fill="#3a3a3a">Master bedroom</text>
+</svg>

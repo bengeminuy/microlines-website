@@ -1,5 +1,5 @@
 export const site = {
-  name: 'Microlines',
+  name: 'Micro Lines Sales Center',
   tagline: 'Custom window blinds and folding doors',
   description:
     'Made-to-measure window blinds and folding doors. On-site measure, professional fitting, and a wide fabric range.',
@@ -10,29 +10,32 @@ export type WeekDay = 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun';
 
 export interface OfficeHours {
   day: WeekDay;
-  open: string;
-  close: string;
+  open?: string;
+  close?: string;
+  closed?: boolean;
 }
 
 export const office = {
   name: 'Microlines Office',
-  addressLines: ['123 Sample Avenue', 'Barangay Placeholder'],
-  city: 'Quezon City',
+  addressLines: ['4070 Magsaysay Blvd', 'Santa Mesa'],
+  city: 'Manila',
   region: 'Metro Manila',
-  postcode: '1100',
+  postcode: '1016',
   country: 'PH',
-  phone: '+63 2 0000 0000',
-  email: 'hello@microlines.example',
+  phone: '+63 917 577 8831',
+  email: 'microlines.info@yahoo.com',
   hours: [
-    { day: 'mon', open: '09:00', close: '18:00' },
-    { day: 'tue', open: '09:00', close: '18:00' },
-    { day: 'wed', open: '09:00', close: '18:00' },
-    { day: 'thu', open: '09:00', close: '18:00' },
-    { day: 'fri', open: '09:00', close: '18:00' },
-    { day: 'sat', open: '10:00', close: '16:00' },
+    { day: 'mon', open: '08:30', close: '17:30' },
+    { day: 'tue', open: '08:30', close: '17:30' },
+    { day: 'wed', open: '08:30', close: '17:30' },
+    { day: 'thu', open: '08:30', close: '17:30' },
+    { day: 'fri', open: '08:30', close: '17:30' },
+    { day: 'sat', open: '08:30', close: '17:30' },
+    { day: 'sun', closed: true },
   ] satisfies OfficeHours[],
-  geo: { lat: 14.676, lng: 121.0437 },
-  mapEmbedUrl: 'https://www.openstreetmap.org/export/embed.html?bbox=121.04,14.67,121.05,14.68',
+  geo: { lat: 14.6022, lng: 121.008 },
+  mapEmbedUrl:
+    'https://www.google.com/maps?q=4070+Magsaysay+Blvd,+Santa+Mesa,+Manila,+Metro+Manila,+Philippines&output=embed',
 } as const;
 
 export type Office = typeof office;

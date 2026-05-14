@@ -1,0 +1,11 @@
+{
+  "title": "Studio apartment, Mandaluyong",
+  "caption": "Charcoal dimout rollers tied the space together and tamed the west-facing afternoon heat.",
+  "beforeImage": "../../assets/gallery/studio-before.svg",
+  "beforeAlt": "Studio apartment window before treatment",
+  "afterImage": "../../assets/gallery/studio-after.svg",
+  "afterAlt": "Studio apartment with charcoal dimout roller blinds",
+  "productRef": "sample-roller-blind",
+  "tags": ["roller", "studio", "dimout", "modern"],
+  "featured": true
+}

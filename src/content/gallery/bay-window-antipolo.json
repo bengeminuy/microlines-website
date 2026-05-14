@@ -1,0 +1,11 @@
+{
+  "title": "Living room bay window, Antipolo",
+  "caption": "Three custom-sized romans across the bay — uniform stack height, no awkward gaps.",
+  "beforeImage": "../../assets/gallery/dining-before.svg",
+  "beforeAlt": "Bay window before installation",
+  "afterImage": "../../assets/gallery/dining-after.svg",
+  "afterAlt": "Bay window with three matching roman blinds",
+  "productRef": "sample-roman-blind",
+  "tags": ["roman", "living", "bay-window", "custom"],
+  "featured": true
+}

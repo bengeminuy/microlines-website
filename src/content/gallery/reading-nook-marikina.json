@@ -1,0 +1,11 @@
+{
+  "title": "Reading nook, Marikina",
+  "caption": "A single small-format roller that turned a dead corner into the family's favourite chair.",
+  "beforeImage": "../../assets/gallery/bedroom-before.svg",
+  "beforeAlt": "Reading nook window before treatment",
+  "afterImage": "../../assets/gallery/bedroom-after.svg",
+  "afterAlt": "Reading nook with a small linen roller blind",
+  "productRef": "sample-roller-blind",
+  "tags": ["roller", "nook", "small-format"],
+  "featured": true
+}

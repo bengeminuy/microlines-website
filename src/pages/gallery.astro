@@ -19,9 +19,13 @@ const items = await getGalleryItems();
       </p>
     </header>
 
-    <div class="grid gap-12">
+    <div class="divide-y divide-[color:var(--color-border)]">
       {items.map((g) => (
-        <figure class="space-y-3">
+        <figure class="py-14 first:pt-0 last:pb-0">
+          <figcaption class="mb-6">
+            <h2 class="t-h2">{g.data.title}</h2>
+            {g.data.caption && <p class="t-body prose-measure mt-2">{g.data.caption}</p>}
+          </figcaption>
           <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <span class="t-label mb-1 block">Before</span>
@@ -44,10 +48,6 @@ const items = await getGalleryItems();
               />
             </div>
           </div>
-          <figcaption>
-            <p class="t-h3">{g.data.title}</p>
-            {g.data.caption && <p class="t-caption mt-1">{g.data.caption}</p>}
-          </figcaption>
         </figure>
       ))}
     </div>

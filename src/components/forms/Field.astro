@@ -26,8 +26,8 @@ const error = errors[name];
 const id = `field-${name}`;
 ---
 
-<label for={id} class="grid gap-1.5">
-  <span class="t-ui">
+<label for={id} class="field" data-error={error ? '' : undefined}>
+  <span class="field__label t-label">
     {label}{required && <span aria-hidden="true" class="text-[var(--color-brand)]"> *</span>}
   </span>
   <input
@@ -40,7 +40,7 @@ const id = `field-${name}`;
     value={value}
     aria-invalid={error ? 'true' : undefined}
     aria-describedby={error ? `${id}-error` : undefined}
-    class="t-body-sm rounded-md border border-[var(--color-border)] bg-[var(--color-canvas)] px-3 py-2 text-[var(--color-ink)]"
+    class="field__input"
   />
-  {error && <span id={`${id}-error`} class="t-caption text-[var(--color-brand)]">{error}</span>}
+  {error && <span id={`${id}-error`} class="field__error t-caption text-[var(--color-brand)]">{error}</span>}
 </label>

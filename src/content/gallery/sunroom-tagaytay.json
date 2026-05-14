@@ -1,0 +1,11 @@
+{
+  "title": "Sunroom, Tagaytay",
+  "caption": "Sheer rollers soften the bright midday light while keeping the ridge view in full.",
+  "beforeImage": "../../assets/gallery/sunroom-before.svg",
+  "beforeAlt": "Tagaytay sunroom with bare windows",
+  "afterImage": "../../assets/gallery/sunroom-after.svg",
+  "afterAlt": "Tagaytay sunroom fitted with sheer roller blinds",
+  "productRef": "sample-roller-blind",
+  "tags": ["roller", "sunroom", "sheer"],
+  "featured": true
+}

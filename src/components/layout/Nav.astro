@@ -1,5 +1,18 @@
 ---
-type SubLink = { href: string; label: string; description?: string };
+import { Image } from 'astro:assets';
+import rollerImg from '@/assets/products/sample-roller.svg';
+import romanImg from '@/assets/products/sample-roman.svg';
+import bifoldImg from '@/assets/products/sample-bifold.svg';
+
+type SubLink = {
+  key: string;
+  href: string;
+  label: string;
+  description: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+};
+
 type NavLink = { href: string; label: string; bold?: boolean; menu?: 'blinds' | 'doors' };
 
 const navLinks: NavLink[] = [
@@ -12,27 +25,41 @@ const navLinks: NavLink[] = [
 
 const blindsSubLinks: SubLink[] = [
   {
+    key: 'roller',
     href: '/blinds/roller',
     label: 'Roller Blinds',
-    description: 'Sleek and versatile — pairs with blackout, dimout, sheer, or sunscreen fabrics.',
+    description:
+      'Sleek and versatile — pairs with blackout, dimout, sheer, or sunscreen fabrics for room-by-room control of light and privacy.',
+    image: rollerImg,
+    imageAlt: 'Roller blind sample',
   },
   {
+    key: 'roman',
     href: '/blinds/roman',
     label: 'Roman Blinds',
-    description: 'Soft fabric folds for a tailored, residential feel.',
+    description:
+      'Soft fabric folds for a tailored, residential feel. A natural fit for bedrooms, living rooms, and dressing areas.',
+    image: romanImg,
+    imageAlt: 'Roman blind sample',
   },
   {
+    key: 'venetian',
     href: '/blinds/venetian',
     label: 'Venetian Blinds',
-    description: 'Tilt-controlled slats in aluminium, timber, or faux-wood.',
+    description:
+      'Tilt-controlled horizontal slats — fine-grained light and privacy in aluminium, timber, or faux-wood.',
   },
 ];
 
 const doorsSubLinks: SubLink[] = [
   {
+    key: 'bifold',
     href: '/folding-doors',
     label: 'Aluminium Bifold',
-    description: 'Slim-frame bifold systems in 2, 3, 4, and 6-panel configurations.',
+    description:
+      'Slim-frame bifold systems in 2, 3, 4, and 6-panel configurations. Open up to 90% of the wall span for indoor-outdoor flow.',
+    image: bifoldImg,
+    imageAlt: 'Aluminium bifold door',
   },
 ];
 
@@ -74,44 +101,81 @@ const currentPath = Astro.url.pathname;
   >
     <div class="dropdown-section" data-content="blinds">
       <div class="container-page py-8">
-        <ul class="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
-          {
-            blindsSubLinks.map((s) => (
-              <li>
-                <a
-                  href={s.href}
-                  class="block rounded-md p-3 transition-colors hover:bg-[var(--color-surface)]"
-                >
-                  <div class="t-ui font-semibold text-[var(--color-ink)]">{s.label}</div>
-                  {s.description && (
-                    <p class="t-body-sm mt-1 text-[var(--color-muted)]">{s.description}</p>
+        <div class="grid grid-cols-2">
+          <ul>
+            {
+              blindsSubLinks.map((s) => (
+                <li data-preview={s.key}>
+                  <a
+                    href={s.href}
+                    class="t-ui block rounded-md py-3 pr-8 pl-4 font-semibold text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-ink)]"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="preview-stack pl-8">
+            {
+              blindsSubLinks.map((s) => (
+                <div class="preview-card" data-preview-target={s.key}>
+                  {s.image ? (
+                    <Image
+                      src={s.image}
+                      alt={s.imageAlt!}
+                      class="aspect-[4/3] w-full rounded-md bg-[var(--color-surface)] object-cover"
+                    />
+                  ) : (
+                    <div class="aspect-[4/3] w-full rounded-md bg-[var(--color-surface)]" />
                   )}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+                  <h3 class="t-h3 mt-4 text-[var(--color-ink)]">{s.label}</h3>
+                  <p class="t-body-sm mt-2 text-[var(--color-muted)]">{s.description}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
       </div>
     </div>
+
     <div class="dropdown-section" data-content="doors">
       <div class="container-page py-8">
-        <ul class="grid gap-x-8 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
-          {
-            doorsSubLinks.map((s) => (
-              <li>
-                <a
-                  href={s.href}
-                  class="block rounded-md p-3 transition-colors hover:bg-[var(--color-surface)]"
-                >
-                  <div class="t-ui font-semibold text-[var(--color-ink)]">{s.label}</div>
-                  {s.description && (
-                    <p class="t-body-sm mt-1 text-[var(--color-muted)]">{s.description}</p>
+        <div class="grid grid-cols-2">
+          <ul>
+            {
+              doorsSubLinks.map((s) => (
+                <li data-preview={s.key}>
+                  <a
+                    href={s.href}
+                    class="t-ui block rounded-md py-3 pr-8 pl-4 font-semibold text-[var(--color-muted)] transition-colors hover:bg-[var(--color-surface)] hover:text-[var(--color-ink)]"
+                  >
+                    {s.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <div class="preview-stack pl-8">
+            {
+              doorsSubLinks.map((s) => (
+                <div class="preview-card" data-preview-target={s.key}>
+                  {s.image ? (
+                    <Image
+                      src={s.image}
+                      alt={s.imageAlt!}
+                      class="aspect-[4/3] w-full rounded-md bg-[var(--color-surface)] object-cover"
+                    />
+                  ) : (
+                    <div class="aspect-[4/3] w-full rounded-md bg-[var(--color-surface)]" />
                   )}
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+                  <h3 class="t-h3 mt-4 text-[var(--color-ink)]">{s.label}</h3>
+                  <p class="t-body-sm mt-2 text-[var(--color-muted)]">{s.description}</p>
+                </div>
+              ))
+            }
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -165,6 +229,35 @@ const currentPath = Astro.url.pathname;
     visibility: hidden;
     opacity: 0;
     transition: opacity 0s;
+  }
+
+  /* Preview stack inside each section */
+  .preview-stack {
+    display: grid;
+    grid-template-areas: 'preview';
+  }
+  .preview-card {
+    grid-area: preview;
+    opacity: 0;
+    visibility: hidden;
+  }
+  /* Default: first preview visible */
+  .preview-stack > .preview-card:first-child {
+    opacity: 1;
+    visibility: visible;
+  }
+  /* When any list item is hovered, hide the default first child */
+  .dropdown-section:has(li[data-preview]:hover) .preview-card {
+    opacity: 0;
+    visibility: hidden;
+  }
+  /* Show the preview matching the hovered list item */
+  .dropdown-section:has(li[data-preview='roller']:hover) .preview-card[data-preview-target='roller'],
+  .dropdown-section:has(li[data-preview='roman']:hover) .preview-card[data-preview-target='roman'],
+  .dropdown-section:has(li[data-preview='venetian']:hover) .preview-card[data-preview-target='venetian'],
+  .dropdown-section:has(li[data-preview='bifold']:hover) .preview-card[data-preview-target='bifold'] {
+    opacity: 1;
+    visibility: visible;
   }
 
   @media (prefers-reduced-motion: reduce) {

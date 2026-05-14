@@ -1,0 +1,11 @@
+{
+  "title": "Beach house, La Union",
+  "caption": "UV-stable dimout rollers along the front-facing windows — keeps the interior cool from late morning onward.",
+  "beforeImage": "../../assets/gallery/sunroom-before.svg",
+  "beforeAlt": "Beach house living room with bare windows",
+  "afterImage": "../../assets/gallery/sunroom-after.svg",
+  "afterAlt": "Beach house living room with golden dimout roller blinds",
+  "productRef": "sample-roller-blind",
+  "tags": ["roller", "dimout", "uv", "coastal"],
+  "featured": true
+}

@@ -1,0 +1,10 @@
+{
+  "title": "Café space, Poblacion",
+  "caption": "Bifold doors with integrated sheer panels — open the whole frontage on a quiet morning.",
+  "beforeImage": "../../assets/gallery/cafe-before.svg",
+  "beforeAlt": "Café frontage with plain glass doors",
+  "afterImage": "../../assets/gallery/cafe-after.svg",
+  "afterAlt": "Café frontage with bifold doors and sheer panels installed",
+  "tags": ["bifold", "commercial", "cafe", "sheer"],
+  "featured": true
+}

@@ -3,17 +3,26 @@ import MarketingLayout from '@layouts/MarketingLayout.astro';
 import Hero from '@components/marketing/Hero.astro';
 import HeroGallery from '@components/marketing/HeroGallery.astro';
 import FeaturedCollections from '@components/marketing/FeaturedCollections.astro';
+import BeforeAfter from '@components/marketing/BeforeAfter.astro';
+import PastWorks from '@components/marketing/PastWorks.astro';
 import SocialProof from '@components/marketing/SocialProof.astro';
 import QuoteCTA from '@components/marketing/QuoteCTA.astro';
-import { getFeaturedBlinds, getFeaturedFoldingDoors, getTestimonials } from '@lib/content/queries';
+import {
+  getFeaturedBlinds,
+  getFeaturedFoldingDoors,
+  getFeaturedGalleryItems,
+  getTestimonials,
+} from '@lib/content/queries';
 import { site } from '@lib/site';
 
 const blinds = await getFeaturedBlinds(3);
 const doors = await getFeaturedFoldingDoors(2);
 const testimonials = await getTestimonials(3);
+const galleryItems = await getFeaturedGalleryItems(20);
+const featuredCase = galleryItems[0];
 ---
 
-<MarketingLayout title={site.tagline} description={site.description}>
+<MarketingLayout description={site.description}>
   <Hero
     eyebrow="Your number one importer of leading korean blinds"
     title="Combining quality, elegance, and style to truly elevate any space"
@@ -29,6 +38,22 @@ const testimonials = await getTestimonials(3);
     description="A look at our most-requested blinds and door systems. Browse the full catalogue for the rest."
     blinds={blinds}
     doors={doors}
+  />
+
+  {featuredCase && (
+    <BeforeAfter
+      eyebrow="See the difference"
+      title="From bare windows to a finished room"
+      description="Drag the slider to reveal what a Micro Lines installation looks like in a real space."
+      item={featuredCase}
+    />
+  )}
+
+  <PastWorks
+    eyebrow="Recent installations"
+    title="A few of our recent projects"
+    description="Real spaces, real installations. See the full collection in our gallery."
+    items={galleryItems}
   />
 
   <SocialProof testimonials={testimonials} />

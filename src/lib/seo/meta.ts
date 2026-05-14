@@ -20,7 +20,7 @@ export interface MetaResolved {
 }
 
 export function buildMeta(input: MetaInput, currentPath: string): MetaResolved {
-  const title = input.title ? `${input.title} — ${site.name}` : `${site.name} — ${site.tagline}`;
+  const title = input.title ? `${input.title} — ${site.name}` : site.name;
   const description = input.description ?? site.description;
   const image = absolute(input.image ?? site.defaultOgImage);
   const canonical = absolute(input.canonical ?? currentPath);

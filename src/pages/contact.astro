@@ -1,6 +1,7 @@
 ---
 import MarketingLayout from '@layouts/MarketingLayout.astro';
 import ContactForm from '@components/forms/ContactForm.astro';
+import Button from '@components/ui/Button.astro';
 import { office } from '@lib/site';
 
 const params = Astro.url.searchParams;
@@ -15,54 +16,283 @@ for (const [k, v] of params.entries()) {
 if (params.get('error') === 'transport') {
   errors._form = "Sorry — we couldn't send your message. Please email us instead.";
 }
+
+// Server-side "Open now / Closed" computation in Manila time (UTC+8, no DST).
+const now = new Date();
+const manila = new Date(now.getTime() + (8 * 60 - now.getTimezoneOffset()) * 60000);
+const dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'] as const;
+const dayKey = dayKeys[manila.getDay()];
+const today = office.hours.find((h) => h.day === dayKey);
+const nowMinutes = manila.getHours() * 60 + manila.getMinutes();
+const toMinutes = (hhmm?: string) => {
+  if (!hhmm) return null;
+  const [h, m] = hhmm.split(':').map(Number);
+  return h * 60 + m;
+};
+const openMin = toMinutes(today?.open);
+const closeMin = toMinutes(today?.close);
+const isOpen = !!today && !today.closed && openMin !== null && closeMin !== null && nowMinutes >= openMin && nowMinutes < closeMin;
+
+const dayLabel: Record<typeof dayKeys[number], string> = {
+  mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun',
+};
+
+const fullAddress = `${office.addressLines.join(', ')}, ${office.city}, ${office.region} ${office.postcode}`;
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(fullAddress)}`;
+const telHref = `tel:${office.phone.replace(/\s+/g, '')}`;
+const mailHref = `mailto:${office.email}`;
 ---
 
 <MarketingLayout
   title="Contact"
   description={`Get in touch with ${office.name}.`}
 >
-  <section class="container-page grid gap-10 py-16 md:grid-cols-2">
-    <div>
-      <h1 class="t-display">Contact us</h1>
-      <p class="t-body prose-measure mt-4">
-        Drop us a line — for quotes, the form opposite is fastest. For anything else, we're happy to chat.
+  {/* Band 1 — Hero + quick contact tiles */}
+  <section class="container-page pt-16 pb-12 md:pt-20 md:pb-16">
+    <div class="max-w-3xl" data-reveal>
+      <p class="t-label-brand">Get in touch</p>
+      <h1 class="t-display mt-3">Tell us about your space.</h1>
+      <p class="t-body prose-measure mt-5">
+        For quotes, the form below is fastest. For everything else — drop a line, ring us, or come visit. We're happy to chat.
       </p>
-
-      <address class="mt-10 not-italic">
-        <p class="t-label mb-2">{office.name}</p>
-        <div class="t-body-sm space-y-0.5">
-          {office.addressLines.map((l) => <p>{l}</p>)}
-          <p>{office.city}, {office.region} {office.postcode}</p>
-          <p class="pt-2"><a href={`tel:${office.phone.replace(/\s+/g, '')}`}>{office.phone}</a></p>
-          <p><a href={`mailto:${office.email}`}>{office.email}</a></p>
-        </div>
-      </address>
-
-      <div class="mt-8">
-        <h2 class="t-label mb-2">Hours</h2>
-        <ul class="t-body-sm space-y-0.5">
-          {office.hours.map((h) => (
-            <li class="capitalize">{h.day}: {h.open}–{h.close}</li>
-          ))}
-        </ul>
-      </div>
-
-      {office.mapEmbedUrl && (
-        <div class="mt-8 overflow-hidden rounded-lg border border-[var(--color-border)]">
-          <iframe
-            src={office.mapEmbedUrl}
-            title={`Map showing ${office.name}`}
-            width="100%"
-            height="280"
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-          ></iframe>
-        </div>
-      )}
     </div>
 
-    <div>
-      <ContactForm errors={errors} values={values} succeeded={succeeded} />
+    <div class="mt-12 grid gap-4 md:grid-cols-3">
+      <a
+        href={mailHref}
+        class="contact-tile group block rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-[var(--color-border-strong)]"
+        data-reveal
+        data-reveal-delay="0"
+      >
+        <div class="flex items-center gap-3 text-[var(--color-muted)]">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="M3 7l9 6 9-6" />
+          </svg>
+          <span class="t-label">Email us</span>
+        </div>
+        <p class="t-h3 mt-3 break-words text-[var(--color-ink)]">{office.email}</p>
+        <p class="t-accent mt-2">Replies within one business day</p>
+        <span class="contact-tile__line" aria-hidden="true"></span>
+      </a>
+
+      <a
+        href={telHref}
+        class="contact-tile group block rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-[var(--color-border-strong)]"
+        data-reveal
+        data-reveal-delay="80"
+      >
+        <div class="flex items-center gap-3 text-[var(--color-muted)]">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 4h3l2 5-2.5 1.5a11 11 0 0 0 6 6L15 14l5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" />
+          </svg>
+          <span class="t-label">Call us</span>
+        </div>
+        <p class="t-h3 mt-3 text-[var(--color-ink)]">{office.phone}</p>
+        <p class="t-body-sm mt-2">Mon–Sat, 8:30–17:30</p>
+        <span class="contact-tile__line" aria-hidden="true"></span>
+      </a>
+
+      <a
+        href="#visit"
+        class="contact-tile group block rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] p-6 transition-[transform,border-color] duration-300 hover:-translate-y-0.5 hover:border-[var(--color-border-strong)]"
+        data-reveal
+        data-reveal-delay="160"
+      >
+        <div class="flex items-center gap-3 text-[var(--color-muted)]">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s7-7.5 7-13a7 7 0 1 0-14 0c0 5.5 7 13 7 13z" />
+            <circle cx="12" cy="9" r="2.5" />
+          </svg>
+          <span class="t-label">Visit us</span>
+        </div>
+        <p class="t-h3 mt-3 text-[var(--color-ink)]">{office.city} showroom</p>
+        <p class="t-body-sm mt-2">{office.addressLines[0]}, {office.addressLines[1]}</p>
+        <span class="contact-tile__line" aria-hidden="true"></span>
+      </a>
+    </div>
+  </section>
+
+  {/* Band 2 — Form + sidebar */}
+  <section class="container-page py-16 md:py-20">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-7" data-reveal>
+        <p class="t-label-brand">Send a message</p>
+        <div class="letter-card mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 md:p-10">
+          <ContactForm errors={errors} values={values} succeeded={succeeded} />
+        </div>
+      </div>
+
+      <aside class="lg:col-span-5" data-reveal data-reveal-delay="120">
+        <div>
+          <p class="t-label">Speak to a person</p>
+          <p class="mt-3"><a href={telHref} class="t-h3 text-[var(--color-ink)] hover:text-[var(--color-brand)] transition-colors">{office.phone}</a></p>
+          <p class="t-body-sm mt-1"><a href={mailHref} class="text-[var(--color-brand)] underline-offset-4 hover:underline">{office.email}</a></p>
+        </div>
+
+        <div class="mt-8 border-t border-[var(--color-border)] pt-8">
+          <div class="flex items-center justify-between gap-3">
+            <p class="t-label">Hours</p>
+            {isOpen ? (
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-brand-50)] px-2.5 py-1 text-[var(--color-brand)]">
+                <svg viewBox="0 0 8 8" width="6" height="6" aria-hidden="true"><circle cx="4" cy="4" r="4" fill="currentColor" /></svg>
+                <span class="t-label" style="color: inherit;">Open now</span>
+              </span>
+            ) : (
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-surface-alt)] px-2.5 py-1 text-[var(--color-charcoal)]">
+                <svg viewBox="0 0 8 8" width="6" height="6" aria-hidden="true"><circle cx="4" cy="4" r="3" fill="none" stroke="currentColor" stroke-width="1" /></svg>
+                <span class="t-label" style="color: inherit;">Closed</span>
+              </span>
+            )}
+          </div>
+          <ul class="t-body-sm mt-4 grid gap-1.5">
+            {office.hours.map((h) => (
+              <li class="flex items-baseline justify-between gap-4">
+                <span class={`text-[var(--color-charcoal)] ${h.day === dayKey ? 'font-semibold text-[var(--color-ink)]' : ''}`}>{dayLabel[h.day]}</span>
+                <span class={`tabular-nums text-[var(--color-muted)] ${h.day === dayKey ? 'text-[var(--color-ink)]' : ''}`}>
+                  {h.closed ? 'Closed' : `${h.open}–${h.close}`}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div class="mt-8 border-t border-[var(--color-border)] pt-8">
+          <p class="t-quote">
+            We typically reply within one business day. For urgent jobs, ring us — we answer faster than email.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {/* Band 3 — Showroom map */}
+  <section id="visit" class="bg-[var(--color-surface)]">
+    <div class="container-page py-16 md:py-20">
+      <div class="grid gap-10 lg:grid-cols-12 lg:gap-12">
+        <div class="lg:col-span-5" data-reveal>
+          <p class="t-label-brand">Visit us</p>
+          <h2 class="t-h1 mt-2">Drop in at our {office.city} showroom.</h2>
+          <address class="mt-6 not-italic">
+            <p class="t-body">{office.name}</p>
+            <div class="t-body-sm mt-1 space-y-0.5">
+              {office.addressLines.map((l) => <p>{l}</p>)}
+              <p>{office.city}, {office.region} {office.postcode}</p>
+            </div>
+          </address>
+          <div class="mt-6">
+            <Button href={mapsUrl} variant="outline">Open in Google Maps</Button>
+          </div>
+        </div>
+
+        {office.mapEmbedUrl && (
+          <div class="relative lg:col-span-7" data-reveal data-reveal-delay="120">
+            <div class="relative aspect-[4/3] overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] lg:aspect-auto lg:h-full lg:min-h-[420px]">
+              <iframe
+                src={office.mapEmbedUrl}
+                title={`Map showing ${office.name}`}
+                width="100%"
+                height="100%"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                class="absolute inset-0 h-full w-full border-0"
+              ></iframe>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </section>
+
+  {/* Band 4 — Closing CTA on brand */}
+  <section class="on-brand">
+    <div class="container-page py-16 text-center md:py-20" data-reveal>
+      <p class="t-label">Prefer a quote?</p>
+      <h2 class="t-h1 mt-3">Skip the form. Book a free on-site measure.</h2>
+      <p class="t-body prose-measure mx-auto mt-4">
+        Tell us about your windows or doors and we'll come to you. No obligation.
+      </p>
+      <div class="mt-7">
+        <Button
+          href="/quote"
+          class="bg-[var(--color-canvas)] text-[var(--color-brand)] hover:bg-[var(--color-brand-50)]"
+        >
+          Request a quote
+        </Button>
+      </div>
     </div>
   </section>
 </MarketingLayout>
+
+<style>
+  /* Reveal animation */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Letter card — soft layered shadow, like paper lifting off the page */
+  .letter-card {
+    box-shadow:
+      0 1px 2px rgba(13, 9, 8, 0.04),
+      0 18px 40px -22px rgba(13, 9, 8, 0.18);
+  }
+
+  /* Brand line that slides in across the bottom of contact tiles */
+  .contact-tile {
+    position: relative;
+    overflow: hidden;
+  }
+  .contact-tile__line {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 1px;
+    width: 0;
+    background: var(--color-brand);
+    transition: width 300ms ease;
+  }
+  .contact-tile:hover .contact-tile__line,
+  .contact-tile:focus-visible .contact-tile__line {
+    width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .contact-tile,
+    .contact-tile__line {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  if (typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const delay = parseInt(el.dataset.revealDelay ?? '0', 10);
+            window.setTimeout(() => el.classList.add('is-visible'), delay);
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+    );
+    els.forEach((el) => io.observe(el));
+  } else {
+    document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+  }
+</script>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="800" fill="#e6ece1"/>
+  <rect x="120" y="80" width="960" height="540" fill="#8ea683" stroke="#2a2a2a" stroke-width="6"/>
+  <g stroke="#3f5638" stroke-width="3">
+    <line x1="120" y1="220" x2="1080" y2="220"/>
+    <line x1="120" y1="360" x2="1080" y2="360"/>
+    <line x1="120" y1="500" x2="1080" y2="500"/>
+  </g>
+  <text x="600" y="730" font-family="serif" font-size="32" text-anchor="middle" fill="#3a3a3a">Kitchen window</text>
+</svg>

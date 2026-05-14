@@ -1,6 +1,8 @@
 ---
 import MarketingLayout from '@layouts/MarketingLayout.astro';
 import QuoteForm from '@components/forms/QuoteForm.astro';
+import Button from '@components/ui/Button.astro';
+import { office } from '@lib/site';
 
 const params = Astro.url.searchParams;
 const succeeded = params.get('ok') === '1';
@@ -15,19 +17,188 @@ for (const [k, v] of params.entries()) {
 if (params.get('error') === 'transport') {
   errors._form = "Sorry — we couldn't send your request. Please call or email us.";
 }
+
+const telHref = `tel:${office.phone.replace(/\s+/g, '')}`;
+const mailHref = `mailto:${office.email}`;
+
+const steps = [
+  {
+    n: '01',
+    title: 'We respond',
+    body: 'A team member replies within one business day to confirm details.',
+  },
+  {
+    n: '02',
+    title: 'On-site measure',
+    body: "We come to you with samples. Measure takes 30–45 minutes per room.",
+  },
+  {
+    n: '03',
+    title: 'Itemised quote',
+    body: 'You receive a clear quote with options. No pressure to decide on the spot.',
+  },
+];
 ---
 
 <MarketingLayout
   title="Request a quote"
-  description="Tell us about your space and we'll come measure for free."
+  description="Free on-site measure and quote — no obligation. We come to you with samples."
 >
-  <section class="container-page max-w-2xl py-16">
-    <h1 class="t-display">Request a quote</h1>
-    <p class="t-body mt-3">
-      A team member will be in touch within one business day to schedule a free on-site measure.
-    </p>
-    <div class="mt-8">
-      <QuoteForm preselectProduct={preselectProduct} errors={errors} values={values} succeeded={succeeded} />
+  {/* Band 1 — Hero + trust signals */}
+  <section class="container-page pt-16 pb-12 md:pt-20 md:pb-16">
+    <div class="max-w-3xl" data-reveal>
+      <p class="t-label-brand">Request a quote</p>
+      <h1 class="t-display mt-3">Free measure. No obligation.</h1>
+      <p class="t-body prose-measure mt-5">
+        Tell us about your windows or doors and we'll come to you with samples. The measure is free, the quote is itemised, and there's no pressure to decide on the spot.
+      </p>
+    </div>
+
+    <div class="mt-12 grid gap-4 md:grid-cols-3">
+      <div class="trust-tile rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] p-6" data-reveal data-reveal-delay="0">
+        <div class="flex items-center gap-3 text-[var(--color-muted)]">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M9 12l2 2 4-4" />
+          </svg>
+          <span class="t-label">Free measure</span>
+        </div>
+        <p class="t-h3 mt-3 text-[var(--color-ink)]">No fees, no obligation</p>
+        <p class="t-body-sm mt-2">Quotes and on-site visits are always complimentary.</p>
+      </div>
+
+      <div class="trust-tile rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] p-6" data-reveal data-reveal-delay="80">
+        <div class="flex items-center gap-3 text-[var(--color-muted)]">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6" />
+          </svg>
+          <span class="t-label">On-site visit</span>
+        </div>
+        <p class="t-h3 mt-3 text-[var(--color-ink)]">We come to you</p>
+        <p class="t-body-sm mt-2">Samples in hand so you can see fabrics in your own light.</p>
+      </div>
+
+      <div class="trust-tile rounded-lg border border-[var(--color-border)] bg-[var(--color-canvas)] p-6" data-reveal data-reveal-delay="160">
+        <div class="flex items-center gap-3 text-[var(--color-muted)]">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+          </svg>
+          <span class="t-label">Fast reply</span>
+        </div>
+        <p class="t-h3 mt-3 text-[var(--color-ink)]">One business day</p>
+        <p class="t-body-sm mt-2">Most enquiries get a same-day response from our team.</p>
+      </div>
+    </div>
+  </section>
+
+  {/* Band 2 — Form + sidebar */}
+  <section class="container-page py-16 md:py-20">
+    <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-7" data-reveal>
+        <p class="t-label-brand">Tell us about your space</p>
+        <div class="letter-card mt-4 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-7 md:p-10">
+          <QuoteForm preselectProduct={preselectProduct} errors={errors} values={values} succeeded={succeeded} />
+        </div>
+      </div>
+
+      <aside class="lg:col-span-5" data-reveal data-reveal-delay="120">
+        <div>
+          <p class="t-label">What happens next</p>
+          <ol class="mt-5 grid gap-5">
+            {steps.map((s) => (
+              <li class="flex gap-4">
+                <span class="t-accent w-8 shrink-0 pt-0.5">{s.n}</span>
+                <div>
+                  <p class="t-ui text-[var(--color-ink)]">{s.title}</p>
+                  <p class="t-body-sm mt-1">{s.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <div class="mt-8 border-t border-[var(--color-border)] pt-8">
+          <p class="t-label">Prefer to call?</p>
+          <p class="mt-3"><a href={telHref} class="t-h3 text-[var(--color-ink)] hover:text-[var(--color-brand)] transition-colors">{office.phone}</a></p>
+          <p class="t-body-sm mt-1"><a href={mailHref} class="text-[var(--color-brand)] underline-offset-4 hover:underline">{office.email}</a></p>
+        </div>
+
+        <div class="mt-8 border-t border-[var(--color-border)] pt-8">
+          <p class="t-quote">
+            We measure across {office.city} and nearby areas. If you're further out, ask — we often travel for larger jobs.
+          </p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  {/* Band 3 — Closing CTA on brand */}
+  <section class="on-brand">
+    <div class="container-page py-16 text-center md:py-20" data-reveal>
+      <p class="t-label">Not ready for a measure?</p>
+      <h2 class="t-h1 mt-3">Just want to ask a question first?</h2>
+      <p class="t-body prose-measure mx-auto mt-4">
+        Send us a note instead — we'll help you figure out what's right for your space before any visit.
+      </p>
+      <div class="mt-7">
+        <Button
+          href="/contact"
+          class="bg-[var(--color-canvas)] text-[var(--color-brand)] hover:bg-[var(--color-brand-50)]"
+        >
+          Contact us instead
+        </Button>
+      </div>
     </div>
   </section>
 </MarketingLayout>
+
+<style>
+  /* Reveal animation — same recipe as contact page */
+  [data-reveal] {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Letter card — soft layered shadow, like paper lifting off the page */
+  .letter-card {
+    box-shadow:
+      0 1px 2px rgba(13, 9, 8, 0.04),
+      0 18px 40px -22px rgba(13, 9, 8, 0.18);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  if (typeof window !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const delay = parseInt(el.dataset.revealDelay ?? '0', 10);
+            window.setTimeout(() => el.classList.add('is-visible'), delay);
+            io.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+    );
+    els.forEach((el) => io.observe(el));
+  } else {
+    document.querySelectorAll<HTMLElement>('[data-reveal]').forEach((el) => el.classList.add('is-visible'));
+  }
+</script>

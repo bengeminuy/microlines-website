@@ -1,0 +1,11 @@
+{
+  "title": "Penthouse, Rockwell",
+  "caption": "Motorised dual rollers — sheer by day, blackout by night, all from a single remote.",
+  "beforeImage": "../../assets/gallery/studio-before.svg",
+  "beforeAlt": "Penthouse floor-to-ceiling glass before treatment",
+  "afterImage": "../../assets/gallery/studio-after.svg",
+  "afterAlt": "Penthouse with motorised dual roller blinds",
+  "productRef": "sample-roller-blind",
+  "tags": ["roller", "motorised", "dual", "penthouse"],
+  "featured": true
+}

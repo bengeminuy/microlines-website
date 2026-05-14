@@ -19,12 +19,24 @@ const topics = [
 ---
 
 {succeeded ? (
-  <div class="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+  <div class="text-center">
+    <span class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-brand-50)] text-[var(--color-brand)]" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12.5l4.5 4.5L19 7.5" />
+      </svg>
+    </span>
     <h2 class="t-h2">Message received.</h2>
-    <p class="t-body-sm mt-2">We'll reply within one business day.</p>
+    <p class="t-body-sm prose-measure mx-auto mt-2">
+      Thanks for reaching out. We'll reply within one business day.
+    </p>
+    <a href="/contact" class="t-ui mt-5 inline-block text-[var(--color-brand)] underline-offset-4 hover:underline">Send another message</a>
   </div>
 ) : (
-  <form method="post" action="/api/lead" class="grid gap-4" novalidate>
+  <form method="post" action="/api/lead" class="grid gap-5" novalidate>
+    <p class="t-quote -mt-1 mb-2">
+      A short note is all it takes. Tell us what you have in mind, and we'll take it from there.
+    </p>
+
     <input type="hidden" name="startedAt" value={Date.now()} />
     <div class="hidden" aria-hidden="true">
       <label>
@@ -33,42 +45,53 @@ const topics = [
       </label>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2">
+    <div class="grid gap-5 sm:grid-cols-2">
       <Field name="name" label="Your name" required errors={errors} values={values} autocomplete="name" />
       <Field name="email" type="email" label="Email" required errors={errors} values={values} autocomplete="email" />
     </div>
     <Field name="phone" type="tel" label="Phone (optional)" errors={errors} values={values} autocomplete="tel" />
 
-    <label class="grid gap-1.5">
-      <span class="t-ui">Topic</span>
-      <select
-        name="topic"
-        class="t-body-sm rounded-md border border-[var(--color-border)] bg-[var(--color-canvas)] px-3 py-2 text-[var(--color-ink)]"
-      >
-        {topics.map((t) => (
-          <option value={t.value} selected={selectedTopic === t.value}>{t.label}</option>
-        ))}
-      </select>
+    <label class="field" data-error={errors.topic ? '' : undefined}>
+      <span class="field__label t-label">Topic</span>
+      <span class="field__select-wrap">
+        <select name="topic" class="field__input field__select">
+          {topics.map((t) => (
+            <option value={t.value} selected={selectedTopic === t.value}>{t.label}</option>
+          ))}
+        </select>
+        <svg class="field__caret" aria-hidden="true" viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 8l5 5 5-5" />
+        </svg>
+      </span>
     </label>
 
-    <label class="grid gap-1.5">
-      <span class="t-ui">Message <span aria-hidden="true" class="text-[var(--color-brand)]">*</span></span>
+    <label class="field" data-error={errors.message ? '' : undefined}>
+      <span class="field__label t-label">
+        Message <span aria-hidden="true" class="text-[var(--color-brand)]">*</span>
+      </span>
       <textarea
         name="message"
         rows="5"
         required
-        class="t-body-sm rounded-md border border-[var(--color-border)] bg-[var(--color-canvas)] px-3 py-2 text-[var(--color-ink)]"
+        aria-invalid={errors.message ? 'true' : undefined}
+        aria-describedby={errors.message ? 'field-message-error' : undefined}
+        class="field__input field__textarea"
       >{values.message ?? ''}</textarea>
-      {errors.message && <span class="t-caption text-[var(--color-brand)]">{errors.message}</span>}
+      {errors.message && <span id="field-message-error" class="field__error t-caption text-[var(--color-brand)]">{errors.message}</span>}
     </label>
 
-    {errors._form && <p role="alert" class="t-body-sm rounded-md bg-[var(--color-brand-50)] px-3 py-2 text-[var(--color-brand)]">{errors._form}</p>}
+    {errors._form && <p role="alert" class="t-body-sm rounded-md bg-[var(--color-brand-50)] px-4 py-3 text-[var(--color-brand)]">{errors._form}</p>}
 
-    <button
-      type="submit"
-      class="t-button mt-2 inline-flex items-center justify-center rounded-md bg-[var(--color-brand)] px-5 py-3 text-[var(--color-canvas)] transition-colors hover:bg-[var(--color-brand-900)]"
-    >
-      Send message
-    </button>
+    <div class="mt-2 flex flex-wrap items-center justify-between gap-4">
+      <button type="submit" class="form-submit group t-button inline-flex items-center justify-center gap-2 rounded-md bg-[var(--color-brand)] px-6 py-3 text-[var(--color-canvas)] transition-colors hover:bg-[var(--color-brand-900)]">
+        <span>Send message</span>
+        <svg class="form-submit__arrow" aria-hidden="true" viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 10h12M11 5l5 5-5 5" />
+        </svg>
+      </button>
+      <p class="t-caption italic text-[var(--color-muted)]">
+        Every message is read by hand. — The Microlines team
+      </p>
+    </div>
   </form>
 )}

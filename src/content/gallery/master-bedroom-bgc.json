@@ -1,0 +1,11 @@
+{
+  "title": "Master bedroom, BGC",
+  "caption": "Blackout roman blinds in warm linen for a high-floor bedroom that needed real darkness at night.",
+  "beforeImage": "../../assets/gallery/bedroom-before.svg",
+  "beforeAlt": "Bedroom window with no covering",
+  "afterImage": "../../assets/gallery/bedroom-after.svg",
+  "afterAlt": "Same bedroom window with warm linen roman blinds installed",
+  "productRef": "sample-roman-blind",
+  "tags": ["roman", "bedroom", "blackout"],
+  "featured": true
+}

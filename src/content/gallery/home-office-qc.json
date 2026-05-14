@@ -1,0 +1,11 @@
+{
+  "title": "Home office, Quezon City",
+  "caption": "Cool-tone screen rollers cut the afternoon glare on the monitor without dimming the room.",
+  "beforeImage": "../../assets/gallery/office-before.svg",
+  "beforeAlt": "Home office window before any treatment",
+  "afterImage": "../../assets/gallery/office-after.svg",
+  "afterAlt": "Home office window with screen roller blinds installed",
+  "productRef": "sample-roller-blind",
+  "tags": ["roller", "office", "screen"],
+  "featured": true
+}

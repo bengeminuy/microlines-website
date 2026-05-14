@@ -19,19 +19,35 @@ const productOptions = [
   { value: 'not-sure', label: "I'm not sure yet" },
 ];
 
+const contactOptions = [
+  { value: 'email', label: 'Email' },
+  { value: 'phone', label: 'Phone' },
+  { value: 'either', label: 'Either' },
+];
+
 const selectedProduct = values.productInterest ?? preselectProduct ?? 'not-sure';
 const selectedContact = values.preferredContact ?? 'either';
 ---
 
 {succeeded ? (
-  <div class="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-6">
+  <div class="text-center">
+    <span class="mx-auto mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--color-brand-50)] text-[var(--color-brand)]" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M5 12.5l4.5 4.5L19 7.5" />
+      </svg>
+    </span>
     <h2 class="t-h2">Thanks — we got your request.</h2>
-    <p class="t-body-sm mt-2">
+    <p class="t-body-sm prose-measure mx-auto mt-2">
       A team member will be in touch within one business day to schedule your free on-site measure.
     </p>
+    <a href="/" class="t-ui mt-5 inline-block text-[var(--color-brand)] underline-offset-4 hover:underline">Back to home</a>
   </div>
 ) : (
-  <form method="post" action="/api/quote" class="grid gap-4" novalidate>
+  <form method="post" action="/api/quote" class="grid gap-5" novalidate>
+    <p class="t-quote -mt-1 mb-2">
+      Tell us about your space. The more we know up front, the more accurate the quote.
+    </p>
+
     <input type="hidden" name="startedAt" value={Date.now()} />
     <div class="hidden" aria-hidden="true">
       <label>
@@ -40,55 +56,74 @@ const selectedContact = values.preferredContact ?? 'either';
       </label>
     </div>
 
-    <div class="grid gap-4 sm:grid-cols-2">
+    <div class="grid gap-5 sm:grid-cols-2">
       <Field name="name" label="Your name" required errors={errors} values={values} autocomplete="name" />
       <Field name="email" type="email" label="Email" required errors={errors} values={values} autocomplete="email" />
     </div>
-    <div class="grid gap-4 sm:grid-cols-2">
+
+    <div class="grid gap-5 sm:grid-cols-2">
       <Field name="phone" type="tel" label="Phone" errors={errors} values={values} autocomplete="tel" />
       <Field name="postcode" label="Postcode / area" errors={errors} values={values} autocomplete="postal-code" />
     </div>
 
-    <label class="grid gap-1.5">
-      <span class="t-ui">Product interest</span>
-      <select
-        name="productInterest"
-        class="t-body-sm rounded-md border border-[var(--color-border)] bg-[var(--color-canvas)] px-3 py-2 text-[var(--color-ink)]"
-      >
-        {productOptions.map((opt) => (
-          <option value={opt.value} selected={selectedProduct === opt.value}>{opt.label}</option>
-        ))}
-      </select>
+    <label class="field" data-error={errors.productInterest ? '' : undefined}>
+      <span class="field__label t-label">Product interest</span>
+      <span class="field__select-wrap">
+        <select name="productInterest" class="field__input field__select">
+          {productOptions.map((opt) => (
+            <option value={opt.value} selected={selectedProduct === opt.value}>{opt.label}</option>
+          ))}
+        </select>
+        <svg class="field__caret" aria-hidden="true" viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 8l5 5 5-5" />
+        </svg>
+      </span>
     </label>
 
-    <fieldset class="grid gap-2">
-      <legend class="t-ui">Preferred contact</legend>
-      <div class="t-body-sm flex flex-wrap gap-4">
-        {['email', 'phone', 'either'].map((v) => (
-          <label class="inline-flex items-center gap-2">
-            <input type="radio" name="preferredContact" value={v} checked={selectedContact === v} />
-            <span class="capitalize">{v}</span>
+    <fieldset>
+      <legend class="field__label t-label">Preferred contact</legend>
+      <div class="field-chips" role="radiogroup" aria-label="Preferred contact">
+        {contactOptions.map((opt) => (
+          <label class="field-chip">
+            <input
+              type="radio"
+              name="preferredContact"
+              value={opt.value}
+              checked={selectedContact === opt.value}
+              class="field-chip__input"
+            />
+            <span>{opt.label}</span>
           </label>
         ))}
       </div>
     </fieldset>
 
-    <label class="grid gap-1.5">
-      <span class="t-ui">Message <span class="text-[var(--color-muted)]">(optional)</span></span>
+    <label class="field" data-error={errors.message ? '' : undefined}>
+      <span class="field__label t-label">
+        Message <span class="text-[var(--color-muted)] normal-case tracking-normal">(optional)</span>
+      </span>
       <textarea
         name="message"
         rows="4"
-        class="t-body-sm rounded-md border border-[var(--color-border)] bg-[var(--color-canvas)] px-3 py-2 text-[var(--color-ink)]"
+        aria-invalid={errors.message ? 'true' : undefined}
+        aria-describedby={errors.message ? 'field-message-error' : undefined}
+        class="field__input field__textarea"
       >{values.message ?? ''}</textarea>
+      {errors.message && <span id="field-message-error" class="field__error t-caption text-[var(--color-brand)]">{errors.message}</span>}
     </label>
 
-    {errors._form && <p role="alert" class="t-body-sm rounded-md bg-[var(--color-brand-50)] px-3 py-2 text-[var(--color-brand)]">{errors._form}</p>}
+    {errors._form && <p role="alert" class="t-body-sm rounded-md bg-[var(--color-brand-50)] px-4 py-3 text-[var(--color-brand)]">{errors._form}</p>}
 
-    <button
-      type="submit"
-      class="t-button mt-2 inline-flex items-center justify-center rounded-md bg-[var(--color-brand)] px-5 py-3 text-[var(--color-canvas)] transition-colors hover:bg-[var(--color-brand-900)]"
-    >
-      Request a quote
-    </button>
+    <div class="mt-2 flex flex-wrap items-center justify-between gap-4">
+      <button type="submit" class="form-submit group t-button inline-flex items-center justify-center gap-2 rounded-md bg-[var(--color-brand)] px-6 py-3 text-[var(--color-canvas)] transition-colors hover:bg-[var(--color-brand-900)]">
+        <span>Request a quote</span>
+        <svg class="form-submit__arrow" aria-hidden="true" viewBox="0 0 20 20" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 10h12M11 5l5 5-5 5" />
+        </svg>
+      </button>
+      <p class="t-caption italic text-[var(--color-muted)]">
+        Free measure. No obligation.
+      </p>
+    </div>
   </form>
 )}

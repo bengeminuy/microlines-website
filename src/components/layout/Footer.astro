@@ -27,7 +27,7 @@ const year = new Date().getFullYear();
       <p class="t-label mb-2">Hours</p>
       <ul class="t-body-sm space-y-0.5">
         {office.hours.map((h) => (
-          <li class="capitalize">{h.day}: {h.open}–{h.close}</li>
+          <li class="capitalize">{h.day}: {h.closed ? 'Closed' : `${h.open}–${h.close}`}</li>
         ))}
       </ul>
     </div>

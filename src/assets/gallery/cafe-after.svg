@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+  <rect width="1200" height="800" fill="#d8e4dd"/>
+  <rect x="120" y="80" width="960" height="540" fill="#4a6b5a" stroke="#1a1a1a" stroke-width="6"/>
+  <g stroke="#1f3a2c" stroke-width="3">
+    <line x1="360" y1="80" x2="360" y2="620"/>
+    <line x1="600" y1="80" x2="600" y2="620"/>
+    <line x1="840" y1="80" x2="840" y2="620"/>
+  </g>
+  <text x="600" y="730" font-family="serif" font-size="32" text-anchor="middle" fill="#3a3a3a">Café space</text>
+</svg>

@@ -1,0 +1,10 @@
+{
+  "title": "Kitchen, San Juan",
+  "caption": "Moisture-resistant aluminium venetians over the sink — easy to wipe, easy to tilt.",
+  "beforeImage": "../../assets/gallery/kitchen-before.svg",
+  "beforeAlt": "Kitchen window above the sink before installation",
+  "afterImage": "../../assets/gallery/kitchen-after.svg",
+  "afterAlt": "Kitchen window with sage aluminium venetian blinds",
+  "tags": ["venetian", "kitchen", "aluminium"],
+  "featured": true
+}

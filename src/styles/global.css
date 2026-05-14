@@ -45,8 +45,10 @@ body {
   min-height: 100dvh;
 }
 
-a {
-  color: inherit;
+@layer base {
+  a {
+    color: inherit;
+  }
 }
 
 :focus-visible {
@@ -233,6 +235,144 @@ a {
 .on-dark hr,
 .on-dark .border-divider {
   border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Form fields — shared by ContactForm and QuoteForm.
+   Top-aligned static label, bordered input, brand-color focus border + soft brand shadow ring. */
+.field {
+  display: block;
+}
+
+.field__label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.field__input {
+  width: 100%;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 0.875rem;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.field__input:hover {
+  border-color: var(--color-border-strong);
+}
+
+.field__input:focus {
+  border-color: var(--color-brand);
+  box-shadow: 0 0 0 3px rgba(87, 10, 13, 0.10);
+  outline: none;
+}
+
+.field[data-error] .field__input {
+  border-color: var(--color-brand-500);
+  box-shadow: 0 0 0 3px rgba(140, 21, 33, 0.08);
+}
+
+.field__error {
+  display: block;
+  margin-top: 0.375rem;
+}
+
+/* Custom select — caret SVG positioned absolutely */
+.field__select-wrap {
+  position: relative;
+  display: block;
+}
+
+.field__select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 2.25rem;
+  cursor: pointer;
+}
+
+.field__caret {
+  position: absolute;
+  right: 0.875rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-muted);
+  pointer-events: none;
+}
+
+.field__textarea {
+  resize: vertical;
+  min-height: 9rem;
+  line-height: 1.6;
+}
+
+/* Chip-style picker — for radio groups (e.g. preferred contact method).
+   Reuses DESIGN.md L504–514 tag-chip pattern: surface default, ink-fill when selected. */
+.field-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.field-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  background: var(--color-canvas);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-charcoal);
+  font-family: var(--font-body);
+  font-size: var(--text-ui);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.field-chip:hover {
+  border-color: var(--color-border-strong);
+}
+
+.field-chip__input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.field-chip:has(.field-chip__input:checked) {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-canvas);
+}
+
+.field-chip:has(.field-chip__input:focus-visible) {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 3px;
+}
+
+/* Submit button arrow micro-interaction — shared across forms */
+.form-submit__arrow {
+  transition: transform 200ms ease;
+}
+
+.form-submit:hover .form-submit__arrow,
+.form-submit:focus-visible .form-submit__arrow {
+  transform: translateX(4px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field__input,
+  .field-chip,
+  .form-submit__arrow {
+    transition: none;
+  }
 }
 
 /* Brand section context — DESIGN.md L357–371. */

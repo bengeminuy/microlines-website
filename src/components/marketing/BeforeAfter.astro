@@ -1,0 +1,222 @@
+---
+import { Image } from 'astro:assets';
+import { imageSizes } from '@lib/images';
+import type { GalleryEntry } from '@lib/content/queries';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  description?: string;
+  item: GalleryEntry;
+}
+
+const { eyebrow, title, description, item } = Astro.props as Props;
+const { beforeImage, beforeAlt, afterImage, afterAlt, caption } = item.data;
+---
+
+<section class="border-y border-[var(--color-border)] bg-[var(--color-surface)] py-16 md:py-24">
+  <div class="container-page grid gap-10 md:grid-cols-2 md:items-center">
+    <div class="flex flex-col justify-center">
+      {eyebrow && <p class="t-label-brand mb-4">{eyebrow}</p>}
+      <h2 class="t-h1">{title}</h2>
+      {description && <p class="t-body prose-measure mt-4">{description}</p>}
+    </div>
+
+    <div class="flex flex-col gap-3">
+      <div class="ba-slider" data-ba-slider style="--pos: 50%;">
+        <div class="ba-layer ba-layer--before" aria-hidden="true">
+          <Image
+            src={beforeImage}
+            alt={beforeAlt}
+            widths={imageSizes.gallery.widths.slice()}
+            sizes={imageSizes.gallery.sizes}
+            class="ba-image"
+          />
+          <span class="ba-pill ba-pill--left">Before</span>
+        </div>
+
+        <div class="ba-layer ba-layer--after" aria-hidden="true">
+          <Image
+            src={afterImage}
+            alt={afterAlt}
+            widths={imageSizes.gallery.widths.slice()}
+            sizes={imageSizes.gallery.sizes}
+            class="ba-image"
+          />
+          <span class="ba-pill ba-pill--right">After</span>
+        </div>
+
+        <div class="ba-divider" aria-hidden="true">
+          <div class="ba-handle">
+            <svg width="20" height="10" viewBox="0 0 20 10" fill="none" aria-hidden="true">
+              <path d="M6 1.5L2 5l4 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M14 1.5L18 5l-4 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+        </div>
+
+        <input
+          type="range"
+          min="0"
+          max="100"
+          value="50"
+          step="1"
+          class="ba-range"
+          aria-label={`Reveal more of the after image. ${afterAlt}`}
+          data-ba-range
+        />
+      </div>
+
+      {caption && <p class="t-caption">{caption}</p>}
+    </div>
+  </div>
+</section>
+
+<style>
+  .ba-slider {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    background: var(--color-canvas);
+    user-select: none;
+    touch-action: pan-y;
+  }
+
+  .ba-layer {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ba-layer--after {
+    clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0);
+  }
+
+  .ba-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .ba-pill {
+    position: absolute;
+    bottom: 1rem;
+    font-family: var(--font-body);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 0.3125rem 0.625rem;
+    border-radius: 4px;
+    background: rgba(13, 9, 8, 0.55);
+    color: rgba(254, 252, 251, 0.92);
+    backdrop-filter: blur(8px) saturate(140%);
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    pointer-events: none;
+  }
+
+  .ba-pill--left {
+    left: 1rem;
+  }
+
+  .ba-pill--right {
+    right: 1rem;
+  }
+
+  .ba-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos, 50%);
+    width: 1px;
+    background: rgba(254, 252, 251, 0.85);
+    box-shadow: 0 0 12px rgba(13, 9, 8, 0.35);
+    transform: translateX(-0.5px);
+    pointer-events: none;
+  }
+
+  .ba-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border-radius: 999px;
+    background: rgba(254, 252, 251, 0.18);
+    border: 1px solid rgba(254, 252, 251, 0.55);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    box-shadow: 0 4px 14px rgba(13, 9, 8, 0.28), inset 0 0 0 1px rgba(254, 252, 251, 0.1);
+    color: rgba(254, 252, 251, 0.95);
+    display: grid;
+    place-items: center;
+    transition: transform 200ms ease, background 200ms ease;
+  }
+
+  .ba-slider:hover .ba-handle {
+    background: rgba(254, 252, 251, 0.28);
+    transform: scale(1.06);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ba-handle,
+    .ba-slider:hover .ba-handle {
+      transition: none;
+      transform: none;
+    }
+  }
+
+  .ba-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    opacity: 0;
+    cursor: ew-resize;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .ba-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 44px;
+    height: 100%;
+    background: transparent;
+    cursor: ew-resize;
+  }
+
+  .ba-range::-moz-range-thumb {
+    width: 44px;
+    height: 100%;
+    background: transparent;
+    border: 0;
+    cursor: ew-resize;
+  }
+
+  .ba-slider:has(.ba-range:focus-visible) {
+    outline: 2px solid var(--color-brand);
+    outline-offset: 3px;
+  }
+</style>
+
+<script>
+  const sliders = document.querySelectorAll<HTMLElement>('[data-ba-slider]');
+  sliders.forEach((slider) => {
+    const range = slider.querySelector<HTMLInputElement>('[data-ba-range]');
+    if (!range) return;
+    const sync = () => {
+      slider.style.setProperty('--pos', `${range.value}%`);
+    };
+    range.addEventListener('input', sync);
+    sync();
+  });
+</script>
